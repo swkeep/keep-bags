@@ -1,0 +1,132 @@
+--                _
+--               | |
+--   _____      _| | _____  ___ _ __
+--  / __\ \ /\ / / |/ / _ \/ _ \ '_ \
+--  \__ \\ V  V /|   <  __/  __/ |_) |
+--  |___/ \_/\_/ |_|\_\___|\___| .__/
+--                             | |
+--                             |_|
+-- https://github.com/swkeep
+
+local QBCore = exports['qb-core']:GetCoreObject()
+
+------------------------------------------ Functions -------------------------------------------------
+
+local function save_info(Player, item, ID)
+     if Player.PlayerData.items[item.slot] then
+          if not (type(Player.PlayerData.items[item.slot].info) == "table") then
+               Player.PlayerData.items[item.slot].info = {}
+               Player.PlayerData.items[item.slot].info.ID = ID
+          else
+               Player.PlayerData.items[item.slot].info.ID = ID
+          end
+     end
+     Player.Functions.SetInventory(Player.PlayerData.items, true)
+end
+
+local function save_weight(Player, item, weight)
+     if Player.PlayerData.items[item.slot] then
+          Player.PlayerData.items[item.slot].weight = weight
+     end
+     Player.Functions.SetInventory(Player.PlayerData.items, true)
+end
+
+local function save_password(Player, item, password)
+     if Player.PlayerData.items[item.slot] then
+          Player.PlayerData.items[item.slot].info.password = password
+     end
+     Player.Functions.SetInventory(Player.PlayerData.items, true)
+end
+
+local function get_backpack(Player, ID)
+     for key, value in pairs(Config.items) do
+          local tmp = Player.Functions.GetItemsByName(key)
+          for k, item in pairs(tmp) do
+               if item.info.ID == ID then
+                    return {
+                         item = item,
+                         setting = value
+                    }
+               end
+          end
+     end
+     return
+end
+
+local function getBackpackWeight(ID)
+     local total_weight = 0
+     local stash = 'Backpack_' .. ID
+     local result = MySQL.Sync.fetchScalar("SELECT items FROM stashitems WHERE stash= ?", { stash })
+     result = json.decode(result)
+     for _, value in ipairs(result) do
+          total_weight = total_weight + value.weight
+     end
+     return total_weight
+end
+
+------------------------------------------ create items -------------------------------------------------
+for item_name, value in pairs(Config.items) do
+     QBCore.Functions.CreateUseableItem(item_name, function(source, item)
+          local Player = QBCore.Functions.GetPlayer(source)
+          if not Player then return end
+          local metadata = {}
+          if item.info == '' or (type(item.info) == "table" and item.info.ID == nil) then
+               metadata.ID = RandomID(6)
+               save_info(Player, item, metadata.ID)
+               if value.locked then
+                    TriggerClientEvent('keep-backpack:client:create_password', source, metadata.ID)
+               end
+               return
+          end
+          metadata.ID = item.info.ID
+          metadata.source = source
+          metadata.password = nil
+          metadata.locked = value.locked or false
+          TriggerClientEvent('keep-backpack:client:enter_password', source, metadata)
+     end)
+end
+
+RegisterNetEvent('keep-backpack:server:add_password', function(data)
+     local Player = QBCore.Functions.GetPlayer(source)
+     local backpack = get_backpack(Player, data.ID)
+     if backpack then
+          save_password(Player, backpack.item, data.password)
+          TriggerClientEvent('QBCore:Notify', source, 'Added password', "success")
+          return
+     else
+          TriggerClientEvent('QBCore:Notify', source, 'Failed to add password', "error")
+     end
+end)
+
+RegisterNetEvent('keep-backpack:server:open_backpack', function(backpack_metadata)
+     local Player = QBCore.Functions.GetPlayer(backpack_metadata.source)
+     local backpack = get_backpack(Player, backpack_metadata.ID)
+     local safe_data = {
+          ID = backpack.item.info.ID,
+          setting = backpack.setting
+     }
+
+     if not backpack_metadata.locked then
+          TriggerClientEvent('keep-backpack:client:open', backpack_metadata.source, safe_data)
+          return
+     end
+
+     if backpack.item.info.password == backpack_metadata.password then
+          TriggerClientEvent('keep-backpack:client:open', backpack_metadata.source, safe_data)
+          return
+     else
+          TriggerClientEvent('QBCore:Notify', backpack_metadata.source, 'Wrong password', "error")
+          return
+     end
+end)
+
+RegisterNetEvent('keep-backpack:server:UpdateWeight', function(ID)
+     local src = source
+     local Player = QBCore.Functions.GetPlayer(src)
+     local backpack = get_backpack(Player, ID)
+
+     if backpack then
+          local weight = backpack.setting.weight + math.ceil(getBackpackWeight(ID) * backpack.setting.weight_multiplier)
+          save_weight(Player, backpack.item, weight)
+     end
+end)

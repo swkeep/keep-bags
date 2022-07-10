@@ -1,0 +1,177 @@
+{
+  "fivemNetworkEvent": {
+    "scope": "lua",
+    "prefix": "registerNetEvent",
+    "body": [
+      "RegisterNetEvent('${WORKSPACE_NAME}:${TM_DIRECTORY/^.+\\\\(.*)$/$1/}:${1:eventName}', function(${2})",
+      "\t${3}",
+      "end)"
+    ]
+  },
+  "createCallbackQbcore": {
+    "scope": "lua",
+    "prefix": "createCallbackQbcore",
+    "body": [
+      "QBCore.Functions.CreateCallback('${WORKSPACE_NAME}:${TM_DIRECTORY/^.+\\\\(.*)$/$1/}:${1:eventName}', function(source, cb)",
+      "\tlocal Player = QBCore.Functions.GetPlayer(source)",
+      "${2}",
+      "\tcb(Player)",
+      "end)"
+    ]
+  },
+  "triggerCallbackQbcore": {
+    "scope": "lua",
+    "prefix": "triggerCallbackQbcore",
+    "body": [
+      "QBCore.Functions.TriggerCallback('${1:eventName}', function(result)",
+      "${3}",
+      "end , ${2:dataThatGetSentToServer})"
+    ]
+  },
+  "newFunction": {
+    "scope": "lua",
+    "prefix": "classNewFunction",
+    "body": [
+      "function ${TM_SELECTED_TEXT}:${1:className}(${2})",
+      "\t${3}",
+      "end"
+    ]
+  },
+  "Wait": {
+    "prefix": "wait",
+    "body": ["Wait(${1:msec})"]
+  },
+  "TriggerEvent": {
+    "prefix": "triggerEvent",
+    "body": ["TriggerEvent('${1:eventName}', function(${2})", "\t${3}", "end)"]
+  },
+  "TriggerClientEvent": {
+    "prefix": "triggerClientEvent",
+    "body": ["TriggerClientEvent('${1:eventName}', ${2:playerId}, ${3:data})"]
+  },
+  "TriggerServerEvent": {
+    "prefix": "triggerServerEvent",
+    "body": ["TriggerServerEvent('${1:eventName}', ${2:data} )"]
+  },
+  "createClass": {
+    "prefix": "createClass",
+    "body": [
+      "local ${1:className} = { DataTable = {} }",
+      "",
+      "function ${1:className}:new(o)",
+      "\to = o or {}",
+      "\tself.DataTable[#self.DataTable + 1] = o",
+      "\treturn o",
+      "end",
+      "",
+      "function ${1:className}:getByIndex(index)",
+      "\treturn self.DataTable[index]",
+      "end",
+      "",
+      "function ${1:className}:getById(id)",
+      "\tfor key, value in pairs(self.DataTable) do",
+      "\t\tif value.id == id then",
+      "\t\t\treturn value",
+      "\t\tend",
+      "\tend",
+      "\treturn false",
+      "end"
+    ]
+  },
+  "RegisterNUICallback": {
+    "prefix": "registerNUICallback",
+    "body": ["RegisterNUICallback(${1:type}, ${2:callback})"]
+  },
+  "SendNUIMessage": {
+    "prefix": "gendNUIMessage",
+    "body": ["SendNUIMessage(${1:message})"]
+  },
+  "GetCurrentResourceName": {
+    "prefix": "getCurrentResourceName",
+    "body": ["GetCurrentResourceName()"]
+  },
+  "GetEntityCoords": {
+    "prefix": "getEntityCoords",
+    "body": ["local pedCoord = GetEntityCoords(${1:entity})"]
+  },
+  "GetEntityType": {
+    "prefix": "getEntityType",
+    "body": ["local pedType = GetEntityType(${1:entity})"]
+  },
+  "GetHashKey": {
+    "prefix": "getHashKey",
+    "body": ["GetHashKey(${1:model})"]
+  },
+  "SetEntityCoords": {
+    "prefix": "setEntityCoords",
+    "body": [
+      "SetEntityCoords(${1:entity}, ${2:xPos}, ${3:yPos}, ${4:zPos}, ${5:xAxis}, ${6:yAxis}, ${7:zAxis}, ${8:clearArea})"
+    ]
+  },
+  "SetEntityHeading": {
+    "prefix": "setEntityHeading",
+    "body": ["SetEntityHeading(${1:entity}, ${2:heading})"]
+  },
+  "SetEntityRotation": {
+    "prefix": "setEntityRotation",
+    "body": [
+      "SetEntityRotation(${1:entity}, ${2:pitch}, ${3:roll}, ${4:yaw}, ${5:rotationOrder}, ${6:p5})"
+    ]
+  },
+  "SetPedIntoVehicle": {
+    "prefix": "setPedIntoVehicle",
+    "body": ["SetPedIntoVehicle(${1:ped}, ${2:vehicle}, ${3:seatIndex})"]
+  },
+  "CreatePed": {
+    "prefix": "createPed",
+    "body": [
+      "local ped = CreatePed(${1:pedType}, ${2:modelHash}, ${3:x}, ${4:y}, ${5:z}, ${6:heading}, ${7:isNetwork}, ${8:thisScriptCheck})"
+    ]
+  },
+  "CreatePedInsideVehicle": {
+    "prefix": "createPedInsideVehicle",
+    "body": [
+      "local ped = CreatePedInsideVehicle(${1:vehicle}, ${2:pedType}, ${3:modelHash}, ${4:seat}, ${5:isNetwork}, ${6:thisScriptCheck})"
+    ]
+  },
+  "resourcestart": {
+    "scope": "lua",
+    "prefix": "resourcestart",
+    "body": [
+      "AddEventHandler('onResourceStart', function(resourceName)",
+      "\tif (GetCurrentResourceName() ~= resourceName) then return end",
+      "${2}",
+      "\tcb(Player)",
+      "end)"
+    ]
+  },
+  "resourcestop": {
+    "scope": "lua",
+    "prefix": "resourcestop",
+    "body": [
+      "AddEventHandler('onResourceStop', function(resourceName)",
+      "\tif (GetCurrentResourceName() ~= resourceName) then return end",
+      "${2}",
+      "\tcb(Player)",
+      "end)"
+    ]
+  },
+  "playerunload": {
+    "scope": "lua",
+    "prefix": "playerunload",
+    "body": [
+      "AddEventHandler('QBCore:Client:OnPlayerUnload', function(resourceName)",
+      "${2}",
+      "end)"
+    ]
+  },
+  "playerload": {
+    "scope": "lua",
+    "prefix": "playerload",
+    "body": [
+      "AddEventHandler('QBCore:Client:OnPlayerLoaded', function(resourceName)",
+      "${2}",
+      "end)"
+    ]
+  }
+}
