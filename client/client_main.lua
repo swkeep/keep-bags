@@ -234,8 +234,8 @@ end
 local function getHotbarItems()
      local items = QBCore.Functions.GetPlayerData().items
      local tmp = {}
-     for i = 1, 5, 1 do
-          tmp[i] = items[i]
+     for _, slot in pairs(Config.Hotbar) do
+          tmp[slot] = items[slot]
      end
      return tmp
 end
@@ -246,14 +246,14 @@ function StartThread()
      CreateThread(function()
           while true do
                local hotbar_items = getHotbarItems()
-               for i = 1, 5, 1 do
-                    if hotbar_items[i] then
-                         local backpack = getBackpack(hotbar_items[i].name)
+               for _, slot in pairs(Config.Hotbar) do
+                    if hotbar_items[slot] then
+                         local backpack = getBackpack(hotbar_items[slot].name)
                          if backpack then
-                              BODY:attach(backpack, i)
+                              BODY:attach(backpack, slot)
                          end
                     else
-                         BODY:cleanUpProps(i)
+                         BODY:cleanUpProps(slot)
                     end
                end
                Wait(1000)

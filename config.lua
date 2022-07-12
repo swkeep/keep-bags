@@ -78,6 +78,11 @@ local props = {
      }
 }
 
+-- which slots are your hot bar
+Config.Hotbar = {
+     1, 2, 3, 4, 5, 41
+}
+
 Config.duration = {
      open = 1, --sec
      close = 1

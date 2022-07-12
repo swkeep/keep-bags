@@ -129,7 +129,12 @@ end
 ------------------------------------------ create items -------------------------------------------------
 
 local function isOnHotbar(slot)
-     return (slot >= 1 and slot <= 5)
+     for _, _slot in pairs(Config.Hotbar) do
+          if slot == _slot then
+               return true
+          end
+     end
+     return false
 end
 
 for item_name, value in pairs(Config.items) do
