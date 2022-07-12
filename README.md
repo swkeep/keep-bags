@@ -2,7 +2,7 @@
 
 ![Keep-backpack](https://raw.githubusercontent.com/swkeep/keep-backpack/main/.github/images/backpack.png)
 
-- A backpacks script that allow players carry more items within their inventory.
+- A backpacks script that allows players to carry more items within their inventory.
 
 # Key Features
 
@@ -164,3 +164,13 @@ elseif type == "drop" then
      ["blipcolor"] = 0
 },
 ```
+
+- done
+
+# Support
+
+- [Discord](https://discord.gg/ccMArCwrPV)
+
+# Donation
+
+-
