@@ -1,6 +1,23 @@
 # keep-backpack
 
+![Keep-backpack](https://raw.githubusercontent.com/swkeep/keep-backpack/main/.github/images/backpack.png)
+
 - A backpacks script that allow players carry more items within their inventory.
+
+# Key Features
+
+- players can carry more materials in their inventory
+- backpack props on the player's back or hands
+- blacklisted items
+- opening/closing animation and duration
+- locking system for backpacks
+- players can not use backpacks if they are not on their Hotbar
+- weight affects player's movement speed
+- no backpack in backpack exploit
+
+# Preview
+
+[Keep-backpack](https://youtu.be/7r6rUoMfvV4)
 
 # Dependencies
 
