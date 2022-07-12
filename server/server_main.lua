@@ -78,7 +78,6 @@ end
 local function isBlacklisted(item)
      if not Config.Blacklist_items.active then return false end
      for _, item_name in pairs(Config.Blacklist_items.list) do
-          print(item.name, item_name)
           if item.name == item_name then
                return true
           end
@@ -197,7 +196,6 @@ QBCore.Functions.CreateCallback('keep-backpack:server:UpdateWeight', function(so
      local src = source
      local Player = QBCore.Functions.GetPlayer(src)
      local backpack = get_backpack(Player, ID)
-
      if backpack then
           local weight = backpack.setting.weight + math.ceil(getBackpackWeight(ID) * backpack.setting.weight_multiplier)
           save_weight(Player, backpack.item, weight)
