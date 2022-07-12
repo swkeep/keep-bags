@@ -21,7 +21,7 @@
      ["image"] = "backpack_girl.png",
      ["unique"] = true,
      ["useable"] = true,
-     ["shouldClose"] = false,
+     ["shouldClose"] = true,
      ["combinable"] = nil,
      ["description"] = "Backpack"
 },
@@ -33,7 +33,7 @@
      ["image"] = "backpack_boy.png",
      ["unique"] = true,
      ["useable"] = true,
-     ["shouldClose"] = false,
+     ["shouldClose"] = true,
      ["combinable"] = nil,
      ["description"] = "Backpack"
 },
@@ -45,7 +45,7 @@
      ["image"] = "briefcase.png",
      ["unique"] = true,
      ["useable"] = true,
-     ["shouldClose"] = false,
+     ["shouldClose"] = true,
      ["combinable"] = nil,
      ["description"] = "Briefcase"
 },
@@ -57,7 +57,7 @@
      ["image"] = "paramedic_bag.png",
      ["unique"] = true,
      ["useable"] = true,
-     ["shouldClose"] = false,
+     ["shouldClose"] = true,
      ["combinable"] = nil,
      ["description"] = "Paramedic bag"
 },
@@ -87,4 +87,63 @@ elseif type == "stash" then
      end
      SaveStashItems(id, Stashes[id].items)
 elseif type == "drop" then
+```
+
+- step3 (optional): add backpackshop
+- open 'qb-shops/config.lua'
+- add new 'products' to 'Config.Products'
+
+```lua
+["backpackshop"] = {
+     [1] = {
+          name = "backpack1",
+          price = 5,
+          amount = 750,
+          info = {},
+          type = "item",
+          slot = 1,
+     },
+     [2] = {
+          name = "backpack2",
+          price = 2500,
+          amount = 5,
+          info = {},
+          type = "item",
+          slot = 2,
+     },
+     [3] = {
+          name = "briefcase",
+          price = 2500,
+          amount = 5,
+          info = {},
+          type = "item",
+          slot = 3,
+     },
+     [4] = {
+          name = "paramedicbag",
+          price = 5000,
+          amount = 5,
+          info = {},
+          type = "item",
+          slot = 4,
+     },
+},
+```
+
+- now add new shop to 'Config.Locations'
+
+```lua
+["backpackshop"] = {
+     ["label"] = "24/7 Backpackshop",
+     ["coords"] = vector4(-135.68, 6199.79, 32.38, 64.55),
+     ["ped"] = 'mp_m_waremech_01',
+     ["scenario"] = "WORLD_HUMAN_CLIPBOARD",
+     ["radius"] = 1.5,
+     ["targetIcon"] = "fas fa-shopping-basket",
+     ["targetLabel"] = "Open Shop",
+     ["products"] = Config.Products["backpackshop"],
+     ["showblip"] = true,
+     ["blipsprite"] = 440,
+     ["blipcolor"] = 0
+},
 ```

@@ -196,12 +196,13 @@ function BODY:attach(backpack, slot)
           return
      else
           local playerped = PlayerPedId()
-          LoadAnim(dict)
-          ClearPedTasks(playerped)
-          print(dict, anim)
-          TaskPlayAnim(playerped, dict, anim, 2.0, 2.0, -1, 51, 0, false, false, false)
-          RemoveAnimDict(dict)
-          Wait(250)
+          if not self.bones['RightHand'].current_active_porp then
+               LoadAnim(dict)
+               ClearPedTasks(playerped)
+               TaskPlayAnim(playerped, dict, anim, 2.0, 2.0, -1, 51, 0, false, false, false)
+               RemoveAnimDict(dict)
+          end
+          Wait(50)
           self.bones[Bone].slot = slot
           self.bones[Bone].current_active_porp = AttachProp(model, self.bones[Bone].bone,
                backpack.prop.animation.attaching_position)

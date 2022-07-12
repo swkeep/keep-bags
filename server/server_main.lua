@@ -122,12 +122,17 @@ local function getBackpackWeight(ID)
      local result = MySQL.Sync.fetchScalar("SELECT items FROM stashitems WHERE stash= ?", { stash })
      result = json.decode(result)
      for _, value in ipairs(result) do
-          total_weight = total_weight + value.weight
+          total_weight = total_weight + (value.weight * value.amount)
      end
      return total_weight
 end
 
 ------------------------------------------ create items -------------------------------------------------
+
+local function isOnHotbar(slot)
+     return (slot >= 1 and slot <= 5)
+end
+
 for item_name, value in pairs(Config.items) do
      QBCore.Functions.CreateUseableItem(item_name, function(source, item)
           local Player = QBCore.Functions.GetPlayer(source)
@@ -145,7 +150,12 @@ for item_name, value in pairs(Config.items) do
           metadata.source = source
           metadata.password = nil
           metadata.locked = value.locked or false
-          TriggerClientEvent('keep-backpack:client:enter_password', source, metadata)
+
+          if isOnHotbar(item.slot) then
+               TriggerClientEvent('keep-backpack:client:enter_password', source, metadata)
+          else
+               TriggerClientEvent('QBCore:Notify', source, 'Backpack is not on your hand!', "error")
+          end
      end)
 end
 
