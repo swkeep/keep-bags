@@ -83,26 +83,31 @@ Config.duration = {
      close = 1
 }
 
+Config.player_slow_on_weight_change = {
+     active = true,
+     weight = 15000
+}
+
 Config.items = {
      ['backpack1'] = {
           slots = 5,
           size = 100000,
           weight = 10000,
-          weight_multiplier = 0.5,
+          weight_multiplier = 0.8, -- less value means items has less weight in backpack
           prop = props.backpack
      },
      ['backpack2'] = {
           slots = 5,
           size = 100000,
           weight = 10000,
-          weight_multiplier = 0.5,
+          weight_multiplier = 0.8,
           prop = props.backpack2
      },
      ['briefcase'] = {
           slots = 3,
           size = 10000,
           weight = 10000,
-          weight_multiplier = 0.5,
+          weight_multiplier = 0.8,
           locked = 'password',
           prop = props.suitcase2
      },
@@ -110,7 +115,14 @@ Config.items = {
           slots = 10,
           size = 50000,
           weight = 10000,
-          weight_multiplier = 0.5,
+          weight_multiplier = 0.8,
           prop = props.paramedicbag
      },
+}
+
+Config.Blacklist_items = {
+     active = true,
+     list = {
+          'weapon_rpg'
+     }
 }

@@ -53,6 +53,69 @@ local function get_backpack(Player, ID)
      return
 end
 
+local function SaveStashItems(stashId, items)
+     if stashId and items then
+          for slot, item in pairs(items) do
+               item.description = nil
+          end
+          MySQL.Async.insert('INSERT INTO stashitems (stash, items) VALUES (:stash, :items) ON DUPLICATE KEY UPDATE items = :items'
+               , {
+               ['stash'] = stashId,
+               ['items'] = json.encode(items)
+          })
+     end
+end
+
+local function isBackPack(item)
+     for item_name, _ in pairs(Config.items) do
+          if item.name == item_name then
+               return true
+          end
+     end
+     return false
+end
+
+local function isBlacklisted(item)
+     if not Config.Blacklist_items.active then return false end
+     for _, item_name in pairs(Config.Blacklist_items.list) do
+          print(item.name, item_name)
+          if item.name == item_name then
+               return true
+          end
+     end
+     return false
+end
+
+local function getNonBackpackItems(source, items)
+     local Player = QBCore.Functions.GetPlayer(source)
+     local non_bacpack_items = {}
+     for key, item in pairs(items) do
+          local is_B_Pack = isBackPack(item)
+          local is_B_Listed = isBlacklisted(item)
+          if is_B_Pack or is_B_Listed then
+               Player.Functions.AddItem(item.name, 1, nil, item.info)
+               TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items[item.name], "add")
+               if is_B_Pack then
+                    TriggerClientEvent('QBCore:Notify', source, "You can not have a backpack in another backpack!",
+                         "error")
+               end
+               if is_B_Listed then
+                    TriggerClientEvent('QBCore:Notify', source, "You can not put this item inside your backpack!",
+                         "error")
+               end
+          else
+               non_bacpack_items[#non_bacpack_items + 1] = item
+          end
+     end
+     return non_bacpack_items
+end
+
+RegisterNetEvent('keep-backpack:server:saveBackpack', function(source, stashId, items, cb)
+     local non_bacpack_items = getNonBackpackItems(source, items)
+     SaveStashItems(stashId, non_bacpack_items)
+     cb(true)
+end)
+
 local function getBackpackWeight(ID)
      local total_weight = 0
      local stash = 'Backpack_' .. ID
@@ -120,7 +183,7 @@ RegisterNetEvent('keep-backpack:server:open_backpack', function(backpack_metadat
      end
 end)
 
-RegisterNetEvent('keep-backpack:server:UpdateWeight', function(ID)
+QBCore.Functions.CreateCallback('keep-backpack:server:UpdateWeight', function(source, cb, ID)
      local src = source
      local Player = QBCore.Functions.GetPlayer(src)
      local backpack = get_backpack(Player, ID)
@@ -128,5 +191,8 @@ RegisterNetEvent('keep-backpack:server:UpdateWeight', function(ID)
      if backpack then
           local weight = backpack.setting.weight + math.ceil(getBackpackWeight(ID) * backpack.setting.weight_multiplier)
           save_weight(Player, backpack.item, weight)
+          cb(weight)
+          return
      end
+     cb(false)
 end)
