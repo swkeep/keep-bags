@@ -143,7 +143,7 @@ for item_name, value in pairs(Config.items) do
           if not Player then return end
           local metadata = {}
           if item.info == '' or (type(item.info) == "table" and item.info.ID == nil) then
-               metadata.ID = RandomID(6)
+               metadata.ID = RandomID(10)
                save_info(Player, item, metadata.ID)
                if value.locked then
                     TriggerClientEvent('keep-backpack:client:create_password', source, metadata.ID)

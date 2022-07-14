@@ -90,8 +90,10 @@ Config.duration = {
 
 Config.player_slow_on_weight_change = {
      active = true,
-     weight = 15000
+     weight = 105000
 }
+
+-- (important) do not use both prop and cloth at same time just one.
 
 Config.items = {
      ['backpack1'] = {
@@ -99,13 +101,16 @@ Config.items = {
           size = 100000,
           weight = 10000,
           weight_multiplier = 0.8, -- less value means items has less weight in backpack
-          prop = props.backpack
+          prop = props.backpack,
      },
      ['backpack2'] = {
-          slots = 5,
+          slots = 6,
           size = 100000,
           weight = 10000,
-          weight_multiplier = 0.8,
+          weight_multiplier = 0.5,
+          -- cloth = {
+          --      ["bag"] = { item = 85, texture = 12 }
+          -- }
           prop = props.backpack2
      },
      ['briefcase'] = {

@@ -195,13 +195,10 @@ function BODY:attach(backpack, slot)
      if self.bones[Bone] and self.bones[Bone].current_active_porp then
           return
      else
-          local playerped = PlayerPedId()
-          if not self.bones['RightHand'].current_active_porp then
-               LoadAnim(dict)
-               ClearPedTasks(playerped)
-               TaskPlayAnim(playerped, dict, anim, 2.0, 2.0, -1, 51, 0, false, false, false)
-               RemoveAnimDict(dict)
-          end
+          LoadAnim(dict)
+          ClearPedTasks(PlayerPedId())
+          TaskPlayAnim(PlayerPedId(), dict, anim, 2.0, 2.0, -1, 51, 0, false, false, false)
+          RemoveAnimDict(dict)
           Wait(50)
           self.bones[Bone].slot = slot
           self.bones[Bone].current_active_porp = AttachProp(model, self.bones[Bone].bone,
@@ -211,11 +208,10 @@ end
 
 function BODY:remove(Bone)
      if self.bones[Bone] and self.bones[Bone].current_active_porp then
-          -- local playerped = PlayerPedId()
           DeleteObject(self.bones[Bone].current_active_porp)
           self.bones[Bone].current_active_porp = nil
           self.bones[Bone].slot = -1
-          -- StopAnimTask(playerped, 'missheistdocksprep1hold_cellphone', 'static', 1.0)
+          StopAnimTask(PlayerPedId(), 'missheistdocksprep1hold_cellphone', 'static', 1.0)
           return
      end
 end
@@ -230,33 +226,82 @@ function BODY:cleanUpProps(slot)
      return nil
 end
 
---
-local function getHotbarItems()
-     local items = QBCore.Functions.GetPlayerData().items
-     local tmp = {}
-     for _, slot in pairs(Config.Hotbar) do
-          tmp[slot] = items[slot]
+local function isItemBackpack(item_name)
+     for name, _ in pairs(Config.items) do
+          if name == item_name then
+               return true
+          end
      end
-     return tmp
+     return false
 end
 
+local function isChanged(oldTable, newTable)
+     if TableCompare(oldTable, newTable, false) == false then
+          return true
+     else
+          return false
+     end
+end
+
+local function dosomething(current, p)
+     local dif_ = difference(p, current)
+
+     for _, item in ipairs(dif_) do
+          if isItemBackpack(item.name) then
+               local backpack = getBackpack(item.name)
+               if backpack.prop then
+                    BODY:cleanUpProps(item.slot)
+               elseif backpack.cloth then
+                    if BODY.bones['Back'].current_active_porp then
+                         TriggerEvent('qb-clothing:client:loadOutfit', {
+                              outfitData = {
+                                   ["bag"] = { item = -1, texture = 0 }
+                              }
+                         })
+                         BODY:remove('Back')
+                    end
+               end
+          end
+     end
+
+     for _, item in ipairs(current) do
+          if item ~= 'empty' and isItemBackpack(item.name) then
+               local backpack = getBackpack(item.name)
+               if backpack.prop then
+                    BODY:attach(backpack, item.slot)
+               elseif backpack.cloth then
+                    if not BODY.bones['Back'].current_active_porp then
+                         TriggerEvent('qb-clothing:client:loadOutfit', { outfitData = backpack.cloth })
+                         BODY.bones['Back'].current_active_porp = 54646 -- something random
+                         BODY.bones['Back'].slot = item.slot
+                    end
+               end
+          end
+     end
+end
+
+local traker = {
+     p_state = {},
+     c_state = {}
+}
 function StartThread()
      if started then return end
      started = true
      CreateThread(function()
           while true do
-               local hotbar_items = getHotbarItems()
-               for _, slot in pairs(Config.Hotbar) do
-                    if hotbar_items[slot] then
-                         local backpack = getBackpack(hotbar_items[slot].name)
-                         if backpack then
-                              BODY:attach(backpack, slot)
-                         end
+               traker.p_state = shallowcopy(traker.c_state)
+               local items = QBCore.Functions.GetPlayerData().items
+               for _, hotbar_slot in pairs(Config.Hotbar) do
+                    if items[hotbar_slot] then
+                         traker.c_state[hotbar_slot] = items[hotbar_slot]
                     else
-                         BODY:cleanUpProps(slot)
+                         traker.c_state[hotbar_slot] = 'empty'
                     end
                end
-               Wait(1000)
+               if isChanged(traker.c_state, traker.p_state) then
+                    dosomething(traker.c_state, traker.p_state)
+               end
+               Wait(2000)
           end
      end)
 end

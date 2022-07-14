@@ -114,3 +114,54 @@ function RandomID(length)
      end
      return string
 end
+
+Compare = function(src, tmp, _reverse)
+     if (type(src) ~= "table" or type(tmp) ~= "table") then
+          return src == tmp
+     end
+
+     for k, v in next, src do
+          if type(v) == "table" then
+               if type(tmp[k]) ~= "table" or not Compare(v, tmp[k]) then
+                    return false
+               end
+          else
+               if tmp[k] ~= v then
+                    return false
+               end
+          end
+     end
+     return _reverse and true or Compare(tmp, src, true)
+end
+
+TableCompare = function(src, tmp, checkMeta)
+     return Compare(src, tmp) and (not checkMeta or Compare(getmetatable(src), getmetatable(tmp)))
+end
+
+function shallowcopy(orig)
+     local orig_type = type(orig)
+     local copy
+     if orig_type == 'table' then
+          copy = {}
+          for orig_key, orig_value in pairs(orig) do
+               copy[orig_key] = orig_value
+          end
+     else -- number, string, boolean, etc
+          copy = orig
+     end
+     return copy
+end
+
+function difference(a, b)
+     local aa = {}
+     for k, v in pairs(a) do aa[v] = true end
+     for k, v in pairs(b) do aa[v] = nil end
+     local ret = {}
+     local n = 0
+     for k, v in pairs(a) do
+          if aa[v] then n = n + 1
+               ret[n] = v
+          end
+     end
+     return ret
+end
