@@ -34,7 +34,7 @@ RegisterNetEvent("keep-backpack:client:open", function(backpack_metadata)
                disableCarMovement = false,
                disableMouse = false,
                disableCombat = true
-          }, {}, {}, {}, function()
+          }, { animDict = "clothingshirt", anim = "try_shirt_positive_d", flags = 49 }, {}, {}, function()
           open_stash(backpack_metadata)
      end)
 end)
@@ -72,7 +72,7 @@ RegisterNetEvent("keep-backpack:client:close", function(ID)
                disableCarMovement = false,
                disableMouse = false,
                disableCombat = true
-          }, {}, {}, {}, function()
+          }, { animDict = "clothingshirt", anim = "try_shirt_positive_d", flags = 49 }, {}, {}, function()
           close_stash(ID)
      end)
 end)
