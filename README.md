@@ -80,7 +80,8 @@
 },
 ```
 
-- step2 (important): fix for exploit (backpack in backpack)
+# step2 (important): fix for exploit (backpack in backpack)
+
 - open qb-inventory/server/main.lua
 - find this event 'inventory:server:SaveInventory'
 - find 'elseif type == "stash" then' it should look like this:
@@ -105,6 +106,12 @@ elseif type == "stash" then
      SaveStashItems(id, Stashes[id].items)
 elseif type == "drop" then
 ```
+
+# (fix) for resetting the weight by dropping the backpack on ground
+
+- open qb-inventory/server/main.lua
+- find this function 'CreateNewDrop(source, fromSlot, toSlot, itemAmount)'
+- now search for 'itemInfo["weight"]' in this function and replace it with 'itemData.weight'
 
 - step3 (optional): add backpackshop
 - open 'qb-shops/config.lua'

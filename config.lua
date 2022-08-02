@@ -101,17 +101,18 @@ Config.items = {
           size = 100000,
           weight = 10000,
           weight_multiplier = 0.8, -- less value means items has less weight in backpack
-          prop = props.backpack,
+          cloth = {
+               ["bag"] = { item = 45, texture = 0 }
+          }
      },
      ['backpack2'] = {
           slots = 6,
           size = 100000,
           weight = 10000,
           weight_multiplier = 0.5,
-          -- cloth = {
-          --      ["bag"] = { item = 85, texture = 12 }
-          -- }
-          prop = props.backpack2
+          cloth = {
+               ["bag"] = { item = 85, texture = 12 }
+          }
      },
      ['briefcase'] = {
           slots = 3,
