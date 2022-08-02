@@ -26,8 +26,13 @@
 
 # How to Install
 
-- step0: Add images inside `inventoryimages` to `qb-inventory/html/images`
-- step1: Add Below code to `qb-core/shared/items.lua`
+# step0:
+
+- Add images inside `inventoryimages` to `qb-inventory/html/images`
+
+# step1:
+
+- Add Below code to `qb-core/shared/items.lua`
 
 ```lua
 ["backpack1"] = {
@@ -80,8 +85,9 @@
 },
 ```
 
-# step2 (important): fix for exploit (backpack in backpack)
+# step2 (important): fix for exploits
 
+- 1: backpack in backpack
 - open qb-inventory/server/main.lua
 - find this event 'inventory:server:SaveInventory'
 - find 'elseif type == "stash" then' it should look like this:
@@ -107,8 +113,7 @@ elseif type == "stash" then
 elseif type == "drop" then
 ```
 
-# (fix) for resetting the weight by dropping the backpack on ground
-
+- 2: resetting the weight by dropping the backpack
 - open qb-inventory/server/main.lua
 - find this function 'CreateNewDrop(source, fromSlot, toSlot, itemAmount)'
 - now search for 'weight = itemInfo["weight"]' in this function (in this table 'Drops[dropId].items[toSlot]')
