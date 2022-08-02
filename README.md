@@ -111,9 +111,21 @@ elseif type == "drop" then
 
 - open qb-inventory/server/main.lua
 - find this function 'CreateNewDrop(source, fromSlot, toSlot, itemAmount)'
-- now search for 'itemInfo["weight"]' in this function and replace it with 'itemData.weight'
+- now search for 'weight = itemInfo["weight"]' in this function (in this table 'Drops[dropId].items[toSlot]')
+- it will look like something like this:
 
-- step3 (optional): add backpackshop
+```lua
+     weight =  itemInfo["weight"],
+```
+
+- edit that line to look exact same as code bellow
+
+```lua
+     weight =  itemData.weight or itemInfo["weight"],
+```
+
+# step3 (optional): add backpackshop
+
 - open 'qb-shops/config.lua'
 - add new 'products' to 'Config.Products'
 
