@@ -83,6 +83,20 @@
      ["combinable"] = nil,
      ["description"] = "Paramedic bag"
 },
+
+-- new item
+["briefcaselockpicker"] = {
+     ["name"] = "briefcaselockpicker",
+     ["label"] = "Briefcase Lockpicker",
+     ["weight"] = 1000,
+     ["type"] = "item",
+     ["image"] = "lockpick.png",
+     ["unique"] = false,
+     ["useable"] = true,
+     ["shouldClose"] = true,
+     ["combinable"] = nil,
+     ["description"] = "Briefcase Lockpicker"
+},
 ```
 
 # step2 (important): fix for exploits

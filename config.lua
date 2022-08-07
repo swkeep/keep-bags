@@ -137,3 +137,11 @@ Config.Blacklist_items = {
           'weapon_rpg'
      }
 }
+
+Config.whitelist = {
+     lockpick = {
+          active = true,
+          jobs = { 'police' },
+          citizenid = {}
+     }
+}

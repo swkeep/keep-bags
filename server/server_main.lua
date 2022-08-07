@@ -163,6 +163,58 @@ for item_name, value in pairs(Config.items) do
      end)
 end
 
+--- lockpick
+local function pickable()
+     local tmp = {}
+     for key, value in pairs(Config.items) do
+          if value.locked then
+               tmp[#tmp + 1] = key
+          end
+     end
+     return tmp
+end
+
+local function isWhitelisted(Player)
+     if not Config.whitelist.lockpick.active then return true end
+     local cid = Player.PlayerData.citizenid
+     local jobname = Player.PlayerData.job.name
+
+     for key, w_cid in pairs(Config.whitelist.lockpick.citizenid) do
+          if w_cid == cid then
+               return true
+          end
+     end
+
+     for key, w_job in pairs(Config.whitelist.lockpick.jobs) do
+          if w_job == jobname then
+               return true
+          end
+     end
+     return false
+end
+
+QBCore.Functions.CreateUseableItem('briefcaselockpicker', function(source, item)
+     local Player = QBCore.Functions.GetPlayer(source)
+     if not Player then return end
+     if not isWhitelisted(Player) then
+          TriggerClientEvent('QBCore:Notify', source, 'You can not use this item!', "error")
+          return
+     end
+     local picables = pickable()
+     for _, name in pairs(picables) do
+          local _item = Player.Functions.GetItemByName(name)
+          local metadata = {}
+          metadata.ID = _item.info.ID
+          metadata.source = source
+          metadata.password = nil
+          metadata.locked = true
+          TriggerClientEvent('keep-backpack:client:lockpick', source, metadata)
+          Player.Functions.RemoveItem('briefcaselockpicker', 1)
+          TriggerClientEvent('qb-inventory:client:ItemBox', source, QBCore.Shared.Items['briefcaselockpicker'], "remove")
+          return
+     end
+end)
+
 RegisterNetEvent('keep-backpack:server:add_password', function(data)
      local Player = QBCore.Functions.GetPlayer(source)
      local backpack = get_backpack(Player, data.ID)
@@ -175,7 +227,7 @@ RegisterNetEvent('keep-backpack:server:add_password', function(data)
      end
 end)
 
-RegisterNetEvent('keep-backpack:server:open_backpack', function(backpack_metadata)
+RegisterNetEvent('keep-backpack:server:open_backpack', function(backpack_metadata, lockpick)
      local Player = QBCore.Functions.GetPlayer(backpack_metadata.source)
      local backpack = get_backpack(Player, backpack_metadata.ID)
      local safe_data = {
@@ -188,7 +240,7 @@ RegisterNetEvent('keep-backpack:server:open_backpack', function(backpack_metadat
           return
      end
 
-     if backpack.item.info.password == backpack_metadata.password then
+     if (backpack.item.info.password == backpack_metadata.password) or lockpick then
           TriggerClientEvent('keep-backpack:client:open', backpack_metadata.source, safe_data)
           return
      else

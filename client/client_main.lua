@@ -118,6 +118,20 @@ RegisterNetEvent('keep-backpack:client:create_password', function(ID)
      end
 end)
 
+RegisterNetEvent("keep-backpack:client:lockpick", function(backpack_metadata)
+     local duration = Config.duration.close
+     QBCore.Functions.Progressbar("keep_backpack_close", 'Lockpicking', 1 * 1000,
+          false, false, {
+               disableMovement = true,
+               disableCarMovement = false,
+               disableMouse = false,
+               disableCombat = true
+          }, {}, {}, {}, function()
+          TriggerServerEvent('keep-backpack:server:open_backpack', backpack_metadata, true)
+     end)
+end)
+
+
 AddEventHandler('onResourceStart', function(resourceName)
      -- for test
      StartThread()
