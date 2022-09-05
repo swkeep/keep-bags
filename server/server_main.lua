@@ -92,7 +92,7 @@ local function getNonBackpackItems(source, items)
           local is_B_Pack = isBackPack(item)
           local is_B_Listed = isBlacklisted(item)
           if is_B_Pack or is_B_Listed then
-               Player.Functions.AddItem(item.name, 1, nil, item.info)
+               Player.Functions.AddItem(item.name, item.amount, nil, item.info)
                TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items[item.name], "add")
                if is_B_Pack then
                     TriggerClientEvent('QBCore:Notify', source, "You can not have a backpack in another backpack!",
