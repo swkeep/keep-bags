@@ -39,28 +39,8 @@ RegisterNetEvent("keep-backpack:client:open", function(backpack_metadata)
      end)
 end)
 
-local _slow_player = false
-local function slow_player()
-     if not Config.player_slow_on_weight_change.active then return end
-     _slow_player = true
-     local Clipset = 'move_p_m_zero_slow'
-     RequestAnimSet(Clipset)
-     while _slow_player do
-          SetPedMovementClipset(PlayerPedId(), Clipset, true)
-          Wait(0)
-     end
-     ResetPedMovementClipset(PlayerPedId(), true)
-     _slow_player = true
-end
 
 local function close_stash(ID)
-     QBCore.Functions.TriggerCallback('keep-backpack:server:UpdateWeight', function(weight)
-          if weight > Config.player_slow_on_weight_change.weight then
-               slow_player()
-          else
-               _slow_player = false
-          end
-     end, ID)
      TriggerEvent('animations:client:EmoteCommandStart', { "c" })
 end
 
@@ -315,7 +295,7 @@ function StartThread()
                if isChanged(traker.c_state, traker.p_state) then
                     dosomething(traker.c_state, traker.p_state)
                end
-               Wait(2000)
+               Wait(2500)
           end
      end)
 end

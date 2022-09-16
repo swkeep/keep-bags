@@ -9,11 +9,11 @@
 - players can carry more materials in their inventory
 - backpack props on the player's back or hands
 - blacklisted items
-- opening/closing animation and duration
+- opening/closing animation
 - locking system for backpacks
 - players can not use backpacks if they are not on their Hotbar
-- weight affects player's movement speed
 - no backpack in backpack exploit
+- (removed) weight and slower movement speed
 
 # Preview
 
@@ -22,6 +22,7 @@
 # Dependencies
 
 - qb-core
+- qb-inventory
 - progressbar
 
 # How to Install
@@ -38,7 +39,7 @@
 ["backpack1"] = {
      ["name"] = "backpack1",
      ["label"] = "Backpack 1",
-     ["weight"] = 10000,
+     ["weight"] = 7500,
      ["type"] = "item",
      ["image"] = "backpack_girl.png",
      ["unique"] = true,
@@ -50,7 +51,7 @@
 ["backpack2"] = {
      ["name"] = "backpack2",
      ["label"] = "Backpack 2",
-     ["weight"] = 10000,
+     ["weight"] = 15000,
      ["type"] = "item",
      ["image"] = "backpack_boy.png",
      ["unique"] = true,
@@ -74,7 +75,7 @@
 ["paramedicbag"] = {
      ["name"] = "paramedicbag",
      ["label"] = "Paramedic bag",
-     ["weight"] = 10000,
+     ["weight"] = 5000,
      ["type"] = "item",
      ["image"] = "paramedic_bag.png",
      ["unique"] = true,
@@ -88,7 +89,7 @@
 ["briefcaselockpicker"] = {
      ["name"] = "briefcaselockpicker",
      ["label"] = "Briefcase Lockpicker",
-     ["weight"] = 1000,
+     ["weight"] = 500,
      ["type"] = "item",
      ["image"] = "lockpick.png",
      ["unique"] = false,
@@ -125,22 +126,6 @@ elseif type == "stash" then
      end
      SaveStashItems(id, Stashes[id].items)
 elseif type == "drop" then
-```
-
-- 2: resetting the weight by dropping the backpack
-- open qb-inventory/server/main.lua
-- find this function 'CreateNewDrop(source, fromSlot, toSlot, itemAmount)'
-- now search for 'weight = itemInfo["weight"]' in this function (in this table 'Drops[dropId].items[toSlot]')
-- it will look like something like this:
-
-```lua
-     weight =  itemInfo["weight"],
-```
-
-- edit that line to look exact same as code bellow
-
-```lua
-     weight =  itemData.weight or itemInfo["weight"],
 ```
 
 # step3 (optional): add backpackshop

@@ -24,13 +24,6 @@ local function save_info(Player, item, ID)
      Player.Functions.SetInventory(Player.PlayerData.items, true)
 end
 
-local function save_weight(Player, item, weight)
-     if Player.PlayerData.items[item.slot] then
-          Player.PlayerData.items[item.slot].weight = weight
-     end
-     Player.Functions.SetInventory(Player.PlayerData.items, true)
-end
-
 local function save_password(Player, item, password)
      if Player.PlayerData.items[item.slot] then
           Player.PlayerData.items[item.slot].info.password = password
@@ -114,17 +107,6 @@ RegisterNetEvent('keep-backpack:server:saveBackpack', function(source, stashId, 
      SaveStashItems(stashId, non_bacpack_items)
      cb(true)
 end)
-
-local function getBackpackWeight(ID)
-     local total_weight = 0
-     local stash = 'Backpack_' .. ID
-     local result = MySQL.Sync.fetchScalar("SELECT items FROM stashitems WHERE stash= ?", { stash })
-     result = json.decode(result)
-     for _, value in ipairs(result) do
-          total_weight = total_weight + (value.weight * value.amount)
-     end
-     return total_weight
-end
 
 ------------------------------------------ create items -------------------------------------------------
 
@@ -247,17 +229,4 @@ RegisterNetEvent('keep-backpack:server:open_backpack', function(backpack_metadat
           TriggerClientEvent('QBCore:Notify', backpack_metadata.source, 'Wrong password', "error")
           return
      end
-end)
-
-QBCore.Functions.CreateCallback('keep-backpack:server:UpdateWeight', function(source, cb, ID)
-     local src = source
-     local Player = QBCore.Functions.GetPlayer(src)
-     local backpack = get_backpack(Player, ID)
-     if backpack then
-          local weight = backpack.setting.weight + math.ceil(getBackpackWeight(ID) * backpack.setting.weight_multiplier)
-          save_weight(Player, backpack.item, weight)
-          cb(weight)
-          return
-     end
-     cb(false)
 end)
