@@ -138,7 +138,7 @@ for item_name, value in pairs(Config.items) do
           metadata.locked = value.locked or false
 
           if isOnHotbar(item.slot) then
-               -- fix to create blan password
+               -- fix to create blank password
                if item.info.password == nil or item.info.password == '' then
                     if value.locked then
                          TriggerClientEvent('keep-backpack:client:create_password', source, metadata.ID)
