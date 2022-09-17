@@ -88,7 +88,7 @@ RegisterNetEvent('keep-backpack:client:create_password', function(ID)
                     type = 'password',
                     isRequired = true,
                     name = 'pass',
-                    text = 'Enter your password'
+                    text = 'Enter new password'
                },
           }
      })
