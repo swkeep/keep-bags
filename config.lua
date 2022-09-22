@@ -92,22 +92,31 @@ Config.duration = {
 
 Config.items = {
      ['backpack1'] = {
-          slots = 10,
-          size = 50000,
-          cloth = {
+          slots = 5,
+          size = 100000,
+          male = {
+               ["bag"] = { item = 85, texture = 12 }
+          },
+
+          female = {
                ["bag"] = { item = 45, texture = 0 }
           }
+
+
      },
      ['backpack2'] = {
-          slots = 5,
-          size = 125000,
-          cloth = {
-               ["bag"] = { item = 74, texture = 8 }
+          slots = 6,
+          size = 100000,
+          male = {
+               ["bag"] = { item = 85, texture = 12 }
+          },
+          female = {
+               ["bag"] = { item = 45, texture = 0 }
           }
      },
      ['briefcase'] = {
           slots = 3,
-          size = 25000,
+          size = 10000,
           locked = 'password',
           prop = props.suitcase2
      },

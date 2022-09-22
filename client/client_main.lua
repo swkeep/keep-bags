@@ -88,7 +88,7 @@ RegisterNetEvent('keep-backpack:client:create_password', function(ID)
                     type = 'password',
                     isRequired = true,
                     name = 'pass',
-                    text = 'Enter your password'
+                    text = 'Enter new password'
                },
           }
      })
@@ -245,7 +245,7 @@ local function dosomething(current, p)
                local backpack = getBackpack(item.name)
                if backpack.prop then
                     BODY:cleanUpProps(item.slot)
-               elseif backpack.cloth then
+               elseif backpack.male or backpack.female then
                     if BODY.bones['Back'].current_active_porp then
                          TriggerEvent('qb-clothing:client:loadOutfit', {
                               outfitData = {
@@ -255,17 +255,39 @@ local function dosomething(current, p)
                          BODY:remove('Back')
                     end
                end
+               local PlayerPed = PlayerPedId()
+               local weapon = GetSelectedPedWeapon(PlayerPed)
+               local CurrentWeaponName = QBCore.Shared.Weapons[weapon]
+               if CurrentWeaponName ~= nil then
+                    if CurrentWeaponName.name:upper() ~= 'WEAPON_UNARMED' then
+                         if backpack.prop then
+                              BODY:cleanUpProps(item.slot)
+                         end
+                    end
+               end
           end
      end
 
      for _, item in ipairs(current) do
           if item ~= 'empty' and isItemBackpack(item.name) then
+               local PlayerPed = PlayerPedId()
+               local weapon = GetSelectedPedWeapon(PlayerPed)
+               local CurrentWeaponName = QBCore.Shared.Weapons[weapon]
                local backpack = getBackpack(item.name)
-               if backpack.prop then
+               if CurrentWeaponName ~= nil and CurrentWeaponName.name:upper() ~= 'WEAPON_UNARMED' then
+                    if backpack.prop then
+                         BODY:cleanUpProps(item.slot)
+                    end
+               elseif backpack.prop then
                     BODY:attach(backpack, item.slot)
-               elseif backpack.cloth then
+               elseif backpack.male or backpack.female then
                     if not BODY.bones['Back'].current_active_porp then
-                         TriggerEvent('qb-clothing:client:loadOutfit', { outfitData = backpack.cloth })
+                         local PlayerData = QBCore.Functions.GetPlayerData()
+                         if PlayerData.charinfo.gender == 0 then
+                              TriggerEvent('qb-clothing:client:loadOutfit', { outfitData = backpack.male })
+                         else
+                              TriggerEvent('qb-clothing:client:loadOutfit', { outfitData = backpack.female })
+                         end
                          BODY.bones['Back'].current_active_porp = 54646 -- something random
                          BODY.bones['Back'].slot = item.slot
                     end
@@ -294,6 +316,14 @@ function StartThread()
                end
                if isChanged(traker.c_state, traker.p_state) then
                     dosomething(traker.c_state, traker.p_state)
+               end
+               local PlayerPed = PlayerPedId()
+               local weapon = GetSelectedPedWeapon(PlayerPed)
+               local CurrentWeaponName = QBCore.Shared.Weapons[weapon]
+               if CurrentWeaponName ~= nil then
+                    if CurrentWeaponName.name:upper() ~= 'WEAPON_UNARMED' then
+                         dosomething(traker.c_state, traker.p_state)
+                    end
                end
                Wait(2500)
           end
