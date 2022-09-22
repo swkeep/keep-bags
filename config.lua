@@ -88,19 +88,12 @@ Config.duration = {
      close = 1
 }
 
-Config.player_slow_on_weight_change = {
-     active = true,
-     weight = 105000
-}
-
 -- (important) do not use both prop and cloth at same time just one.
 
 Config.items = {
      ['backpack1'] = {
           slots = 5,
           size = 100000,
-          weight = 10000,
-          weight_multiplier = 0.8, -- less value means items has less weight in backpack
           male = {
                ["bag"] = { item = 85, texture = 12 }
           },
@@ -109,17 +102,14 @@ Config.items = {
                ["bag"] = { item = 45, texture = 0 }
           }
 
-          
+
      },
      ['backpack2'] = {
           slots = 6,
           size = 100000,
-          weight = 10000,
-          weight_multiplier = 0.5,
           male = {
                ["bag"] = { item = 85, texture = 12 }
           },
-
           female = {
                ["bag"] = { item = 45, texture = 0 }
           }
@@ -127,16 +117,12 @@ Config.items = {
      ['briefcase'] = {
           slots = 3,
           size = 10000,
-          weight = 10000,
-          weight_multiplier = 0.8,
           locked = 'password',
           prop = props.suitcase2
      },
      ['paramedicbag'] = {
           slots = 10,
           size = 50000,
-          weight = 10000,
-          weight_multiplier = 0.8,
           prop = props.paramedicbag
      },
 }
