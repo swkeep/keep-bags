@@ -43,7 +43,7 @@
      ["type"] = "item",
      ["image"] = "backpack_girl.png",
      ["unique"] = true,
-     ["useable"] = true,
+     ["useable"] = false,
      ["shouldClose"] = true,
      ["combinable"] = nil,
      ["description"] = "Backpack"
@@ -55,7 +55,7 @@
      ["type"] = "item",
      ["image"] = "backpack_boy.png",
      ["unique"] = true,
-     ["useable"] = true,
+     ["useable"] = false,
      ["shouldClose"] = true,
      ["combinable"] = nil,
      ["description"] = "Backpack"
