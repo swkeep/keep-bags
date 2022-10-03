@@ -105,11 +105,11 @@ Config.items = {
           size = 100000,
 
           male = {
-               ["bag"] = { item = 17, texture = 4 } -- change item and texture as per your clothing pack
+               ["bag"] = { item = 85, texture = 12 } -- change item and texture as per your clothing pack
           },
 
           female = {
-               ["bag"] = { item = 10, texture = 6 } -- change item and texture as per your clothing pack
+               ["bag"] = { item = 45, texture = 0 } -- change item and texture as per your clothing pack
           }
 
      },
@@ -119,11 +119,11 @@ Config.items = {
           size = 100000,
 
           male = {
-               ["bag"] = { item = 17, texture = 4 } -- change item and texture as per your clothing pack
+               ["bag"] = { item = 85, texture = 12 } -- change item and texture as per your clothing pack
           },
 
           female = {
-               ["bag"] = { item = 10, texture = 6 } -- change item and texture as per your clothing pack
+               ["bag"] = { item = 45, texture = 0 } -- change item and texture as per your clothing pack
           }
      },
      ['briefcase'] = {
