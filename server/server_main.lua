@@ -120,38 +120,122 @@ local function isOnHotbar(slot)
 end
 
 for item_name, value in pairs(Config.items) do
-     QBCore.Functions.CreateUseableItem(item_name, function(source, item)
-          local Player = QBCore.Functions.GetPlayer(source)
-          if not Player then return end
-          local metadata = {}
-          if item.info == '' or (type(item.info) == "table" and item.info.ID == nil) then
-               metadata.ID = RandomID(10)
-               save_info(Player, item, metadata.ID)
-               if value.locked then
-                    TriggerClientEvent('keep-backpack:client:create_password', source, metadata.ID)
-               end
-               return
-          end
-          metadata.ID = item.info.ID
-          metadata.source = source
-          metadata.password = nil
-          metadata.locked = value.locked or false
+     if value.usable then -- only create usable for allowed items
+          QBCore.Functions.CreateUseableItem(item_name, function(source, item)
+               local Player = QBCore.Functions.GetPlayer(source)
+               if not Player then return end
 
-          if isOnHotbar(item.slot) then
-               -- fix to create blank password
-               if item.info.password == nil or item.info.password == '' then
+               -- disallow multiple backpack.
+               if Config.disallowmultiple and (item.name == "backpack1" or item.name == "backpack2") then        
+                    local count = 0
+                    for c, d in pairs(QBCore.Functions.GetPlayer(source).PlayerData.items) do
+                         local PlayerItem = d.name
+                         local PlayerItemAmount = d.amount
+                         if PlayerItem == "backpack1" or PlayerItem == "backpack2" then
+                              count = count + PlayerItemAmount
+                         end
+                    end
+                    if count > 1 then
+                         TriggerClientEvent('QBCore:Notify', source, 'Action not allowd when carrying multiple backpacks!', "error")
+                         return 
+                    end
+               end
+               -- disallow multiple backpack.
+
+               local metadata = {}
+               if item.info == '' or (type(item.info) == "table" and item.info.ID == nil) then
+                    metadata.ID = RandomID(10)
+                    save_info(Player, item, metadata.ID)
                     if value.locked then
                          TriggerClientEvent('keep-backpack:client:create_password', source, metadata.ID)
                          return
                     end
                end
-               -- fix end
-               TriggerClientEvent('keep-backpack:client:enter_password', source, metadata)
-          else
-               TriggerClientEvent('QBCore:Notify', source, 'Backpack is not on your hand!', "error")
-          end
-     end)
+
+               metadata.ID = item.info.ID
+               metadata.source = source
+               metadata.password = nil
+               metadata.locked = value.locked or false
+               if not metadata.ID then return end
+               if isOnHotbar(item.slot) then
+                    -- fix to create blank password
+                    if item.info.password == nil or item.info.password == '' then
+                         if value.locked then
+                              TriggerClientEvent('keep-backpack:client:create_password', source, metadata.ID)
+                              return
+                         end
+                    end
+                    -- fix end
+                    TriggerClientEvent('keep-backpack:client:enter_password', source, metadata)
+               else
+                    TriggerClientEvent('QBCore:Notify', source, 'Backpack is not on your hand!', "error")
+               end
+          end)
+     end
 end
+
+QBCore.Commands.Add('backpack', "Open your bag", {}, false, function(source)
+     local src = source
+     local Player = QBCore.Functions.GetPlayer(src)
+     if not Player then return end
+     local item = Player.Functions.GetItemByName("backpack1")
+     if item == nil then
+          item = Player.Functions.GetItemByName("backpack2")
+     end
+     Wait(10)
+     if item ~= nil then  
+
+          -- disallow multiple backpack.
+          if Config.disallowmultiple then        
+               local count = 0
+               for c, d in pairs(QBCore.Functions.GetPlayer(src).PlayerData.items) do
+                    local PlayerItem = d.name
+                    local PlayerItemAmount = d.amount
+                    if PlayerItem == "backpack1" or PlayerItem == "backpack2" then
+                         count = count + PlayerItemAmount
+                    end
+               end
+               if count > 1 then
+                    TriggerClientEvent('QBCore:Notify', src, 'Action not allowd when carrying multiple backpacks!', "error")
+                    return 
+               end
+          end
+          -- disallow multiple backpack.
+
+          local value = Config.items[item.name]
+          local metadata = {}
+          if item.info == '' or (type(item.info) == "table" and item.info.ID == nil) then
+               metadata.ID = RandomID(10)
+               save_info(Player, item, metadata.ID)
+               if value.locked then
+                    TriggerClientEvent('keep-backpack:client:create_password', src, metadata.ID)
+                    return
+               end
+          end
+          if not metadata.ID then
+               metadata.ID = item.info.ID
+          end
+          metadata.source = src
+          metadata.password = nil
+          metadata.locked = value.locked or false
+          if not metadata.ID then return end
+          if isOnHotbar(item.slot) then
+                -- fix to create blank password
+                if item.info.password == nil or item.info.password == '' then
+                    if value.locked then
+                         TriggerClientEvent('keep-backpack:client:create_password', src, metadata.ID)
+                         return
+                    end
+               end
+               -- fix end
+               TriggerClientEvent('keep-backpack:client:enter_password', src, metadata)
+          else
+               TriggerClientEvent('QBCore:Notify', src, 'Backpack is not on your hand!', "error")
+          end
+     else
+          TriggerClientEvent('QBCore:Notify', src, "You don't have any backpack!", "error")
+     end
+ end)
 
 --- lockpick
 local function pickable()

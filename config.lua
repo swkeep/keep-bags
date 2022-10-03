@@ -83,6 +83,14 @@ Config.Hotbar = {
      1, 2, 3, 4, 5, 41
 }
 
+-- which slots that packe bagpack in back or hand
+Config.backpackslots = {
+     -- added all slots bcoz players keeps backpack in other slot to hide from body
+     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41
+}
+
+Config.disallowmultiple = true -- true/false. true = disallow players to carry multiple backpacks at a time in inventory. appltied on only backpac1 and backpack2
+
 Config.duration = {
      open = 1, --sec
      close = 1
@@ -92,35 +100,41 @@ Config.duration = {
 
 Config.items = {
      ['backpack1'] = {
-          slots = 5,
+          usable = false, -- true/false = false = not creation of usable item. if false then bag can only open using /backpack command. also change this in qb-core/shared/item.lua file
+          slots = 10,
           size = 100000,
+
           male = {
-               ["bag"] = { item = 85, texture = 12 }
+               ["bag"] = { item = 17, texture = 4 } -- change item and texture as per your clothing pack
           },
 
           female = {
-               ["bag"] = { item = 45, texture = 0 }
+               ["bag"] = { item = 10, texture = 6 } -- change item and texture as per your clothing pack
           }
-
 
      },
      ['backpack2'] = {
-          slots = 6,
+          usable = false, -- true/false = false = not creation of usable item. if false then bag can only open using /backpack command. also change this in qb-core/shared/item.lua file
+          slots = 10,
           size = 100000,
+
           male = {
-               ["bag"] = { item = 85, texture = 12 }
+               ["bag"] = { item = 17, texture = 4 } -- change item and texture as per your clothing pack
           },
+
           female = {
-               ["bag"] = { item = 45, texture = 0 }
+               ["bag"] = { item = 10, texture = 6 } -- change item and texture as per your clothing pack
           }
      },
      ['briefcase'] = {
-          slots = 3,
+          usable = true,
+          slots = 5,
           size = 10000,
           locked = 'password',
           prop = props.suitcase2
      },
      ['paramedicbag'] = {
+          usable = true,
           slots = 10,
           size = 50000,
           prop = props.paramedicbag

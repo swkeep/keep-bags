@@ -239,7 +239,6 @@ end
 
 local function dosomething(current, p)
      local dif_ = difference(p, current)
-
      for _, item in ipairs(dif_) do
           if isItemBackpack(item.name) then
                local backpack = getBackpack(item.name)
@@ -307,11 +306,11 @@ function StartThread()
           while true do
                traker.p_state = shallowcopy(traker.c_state)
                local items = QBCore.Functions.GetPlayerData().items
-               for _, hotbar_slot in pairs(Config.Hotbar) do
-                    if items[hotbar_slot] then
-                         traker.c_state[hotbar_slot] = items[hotbar_slot]
+               for _, back_slot in pairs(Config.backpackslots) do
+                    if items[back_slot] then
+                         traker.c_state[back_slot] = items[back_slot]
                     else
-                         traker.c_state[hotbar_slot] = 'empty'
+                         traker.c_state[back_slot] = 'empty'
                     end
                end
                if isChanged(traker.c_state, traker.p_state) then
