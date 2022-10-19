@@ -24,6 +24,17 @@ local function save_info(Player, item, ID)
      Player.Functions.SetInventory(Player.PlayerData.items, true)
 end
 
+local function str_split(inputstr, sep)
+     if sep == nil then
+        sep = "%s"
+     end
+     local t={}
+     for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+        table.insert(t, str)
+     end
+     return t
+end
+
 local function save_password(Player, item, password)
      if Player.PlayerData.items[item.slot] then
           Player.PlayerData.items[item.slot].info.password = password
@@ -68,7 +79,13 @@ local function isBackPack(item)
      return false
 end
 
-local function isBlacklisted(item)
+local function isBlacklisted(item, backpackName)
+
+     -- if Config.Blacklist_items have backpack config and item is blacklisted in backpack config
+     if Config.Blacklist_items[backpackName] and Config.Blacklist_items[backpackName][item.name] then
+          return true
+     end
+
      if not Config.Blacklist_items.active then return false end
      for _, item_name in pairs(Config.Blacklist_items.list) do
           if item.name == item_name then
@@ -78,20 +95,30 @@ local function isBlacklisted(item)
      return false
 end
 
-local function getNonBackpackItems(source, items)
+local function isWhitelisted(item, backpackName)
+     -- if Config.Whitelist_items don't have backpack config, then the item is whitlisted by default.
+     if not Config.Whitelist_items[backpackName] then return true end
+     -- if item is not whitelisted
+     if not Config.Whitelist_items[backpackName][item.name] then return false end
+     -- item is whitelisted from config
+     return true
+end
+
+local function getNonBackpackItems(source, items, backpack)
      local Player = QBCore.Functions.GetPlayer(source)
      local non_bacpack_items = {}
      for key, item in pairs(items) do
+          local is_Whitelisted = isWhitelisted(item, backpack.item.name)
           local is_B_Pack = isBackPack(item)
-          local is_B_Listed = isBlacklisted(item)
-          if is_B_Pack or is_B_Listed then
+          local is_B_Listed = isBlacklisted(item, backpack.item.name)
+          if is_B_Pack or is_B_Listed or not is_Whitelisted then
                Player.Functions.AddItem(item.name, item.amount, nil, item.info)
                TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items[item.name], "add")
                if is_B_Pack then
                     TriggerClientEvent('QBCore:Notify', source, "You can not have a backpack in another backpack!",
                          "error")
                end
-               if is_B_Listed then
+               if is_B_Listed or not is_Whitelisted then
                     TriggerClientEvent('QBCore:Notify', source, "You can not put this item inside your backpack!",
                          "error")
                end
@@ -103,7 +130,13 @@ local function getNonBackpackItems(source, items)
 end
 
 RegisterNetEvent('keep-backpack:server:saveBackpack', function(source, stashId, items, cb)
-     local non_bacpack_items = getNonBackpackItems(source, items)
+     local Player = QBCore.Functions.GetPlayer(source)
+
+     local stashIdData = str_split(stashId, "_")
+     local backpackId = stashIdData[2]
+     local backpack = get_backpack(Player, backpackId)
+
+     local non_bacpack_items = getNonBackpackItems(source, items, backpack)
      SaveStashItems(stashId, non_bacpack_items)
      cb(true)
 end)
