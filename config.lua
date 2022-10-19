@@ -131,8 +131,17 @@ Config.Blacklist_items = {
      active = true,
      list = {
           'weapon_rpg'
-     }
+     },
+     -- backpack2 = {
+     --      ['lockpick'] = true
+     -- }
 }
+
+-- Config.Whitelist_items = {
+--      paramedicbag = {
+--           ['lockpick'] = true
+--      },
+-- }
 
 Config.whitelist = {
      lockpick = {
