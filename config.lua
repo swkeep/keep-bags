@@ -105,7 +105,7 @@ Config.items = {
 
      },
      ['backpack2'] = {
-          slots = 6,
+          slots = 10,
           size = 100000,
           male = {
                ["bag"] = { item = 85, texture = 12 }
@@ -115,7 +115,7 @@ Config.items = {
           }
      },
      ['briefcase'] = {
-          slots = 3,
+          slots = 5,
           size = 10000,
           locked = 'password',
           prop = props.suitcase2
@@ -132,9 +132,9 @@ Config.Blacklist_items = {
      list = {
           'weapon_rpg'
      },
-     backpack2 = {
-          ['lockpick'] = true
-     }
+     -- backpack2 = {
+     --      ['lockpick'] = true
+     -- }
 }
 
 Config.Whitelist_items = {
