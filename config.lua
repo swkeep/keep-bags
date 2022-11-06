@@ -53,6 +53,19 @@ local animations = {
                z_rotation = 75.0,
           }
      },
+     fishicebox = {
+          dict = 'missheistdocksprep1hold_cellphone',
+          anim = 'static',
+          bone = 'RightHand',
+          attaching_position = {
+               x = 0.5,
+               y = 0.0,
+               z = 0.0,
+               x_rotation = 0.0,
+               y_rotation = 270.0,
+               z_rotation = 0.0,
+          }
+     },
 }
 
 local props = {
@@ -75,7 +88,11 @@ local props = {
      paramedicbag = {
           model = 'xm_prop_smug_crate_s_medical',
           animation = animations.paramedicbag
-     }
+     },
+     fishicebox = {
+          model = 'prop_coolbox_01',
+          animation = animations.fishicebox
+     },
 }
 
 -- which slots are your hot bar
@@ -92,26 +109,18 @@ Config.duration = {
 
 Config.items = {
      ['backpack1'] = {
-          slots = 5,
-          size = 100000,
-          male = {
-               ["bag"] = { item = 85, texture = 12 }
-          },
-
-          female = {
-               ["bag"] = { item = 45, texture = 0 }
-          }
-
-
-     },
-     ['backpack2'] = {
           slots = 10,
           size = 100000,
+          prop = props.backpack2
+     },
+     ['backpack2'] = {
+          slots = 20,
+          size = 200000,
           male = {
                ["bag"] = { item = 85, texture = 12 }
           },
           female = {
-               ["bag"] = { item = 45, texture = 0 }
+               ["bag"] = { item = 85, texture = 13 }
           }
      },
      ['briefcase'] = {
@@ -124,6 +133,11 @@ Config.items = {
           slots = 10,
           size = 50000,
           prop = props.paramedicbag
+     },
+     ['fishicebox'] = {
+          slots = 40,
+          size = 200000,
+          prop = props.fishicebox
      },
 }
 
@@ -144,6 +158,19 @@ Config.Whitelist_items = {
           ['ifaks'] = true,
           ['painkillers'] = true,
           ['walkstick'] = true,
+     },
+     fishicebox = {
+          ['stingray'] = true,
+          ['flounder'] = true,
+          ['codfish'] = true,
+          ['mackerel'] = true,
+          ['bass'] = true,
+          ['fishingtin'] = true,
+          ['fishingboot'] = true,
+          ['killerwhale'] = true,
+          ['dolphin'] = true,
+          ['sharkhammer'] = true,
+          ['sharktiger'] = true,
      },
 }
 
