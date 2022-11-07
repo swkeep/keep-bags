@@ -152,6 +152,33 @@ local function isOnHotbar(slot)
      return false
 end
 
+local function t_size(table)
+     local count = 0
+     for _ in pairs(table) do count = count + 1 end
+     return count
+end
+
+local function count_backpacks_of_same_type(Player, item)
+     local item_name = item.name
+     local backpacks = Player.Functions.GetItemsByName(item_name)
+     return t_size(backpacks)
+end
+
+local function not_allowed_to_carry_multiple_backpacks()
+     if not Config.not_allowed_to_carry_multiple_backpacks then return false end
+     return true
+end
+
+local function does_have_multiple_backpacks(Player, item)
+     if not_allowed_to_carry_multiple_backpacks() then
+          if count_backpacks_of_same_type(Player, item) > Config.maximum_allowed then
+               return true
+          end
+          return false
+     end
+     return false
+end
+
 for item_name, value in pairs(Config.items) do
      QBCore.Functions.CreateUseableItem(item_name, function(source, item)
           local Player = QBCore.Functions.GetPlayer(source)
@@ -169,6 +196,11 @@ for item_name, value in pairs(Config.items) do
           metadata.source = source
           metadata.password = nil
           metadata.locked = value.locked or false
+
+          if does_have_multiple_backpacks(Player, item) then
+               TriggerClientEvent('QBCore:Notify', source, 'Action not allowd when carrying multiple backpacks!', "error")
+               return
+          end
 
           if isOnHotbar(item.slot) then
                -- fix to create blank password

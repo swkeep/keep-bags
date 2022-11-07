@@ -105,13 +105,22 @@ Config.duration = {
      close = 1
 }
 
+Config.not_allowed_to_carry_multiple_backpacks = true
+Config.maximum_allowed = 2
+
 -- (important) do not use both prop and cloth at same time just one.
 
 Config.items = {
      ['backpack1'] = {
           slots = 10,
           size = 100000,
-          prop = props.backpack2
+          male = {
+               ["bag"] = { item = 85, texture = 12 }
+          },
+
+          female = {
+               ["bag"] = { item = 45, texture = 0 }
+          }
      },
      ['backpack2'] = {
           slots = 20,
@@ -127,7 +136,8 @@ Config.items = {
           slots = 5,
           size = 10000,
           locked = 'password',
-          prop = props.suitcase2
+          prop = props.suitcase2,
+          remove_when_using_weapon = true
      },
      ['paramedicbag'] = {
           slots = 10,
