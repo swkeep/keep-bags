@@ -28,13 +28,12 @@ end
 RegisterNetEvent("keep-backpack:client:open", function(backpack_metadata)
      if not backpack_metadata then return end
      local duration = Config.duration.open
-     QBCore.Functions.Progressbar("keep_gunrack_opening", 'Open', duration * 1000,
-          false, false, {
-               disableMovement = true,
-               disableCarMovement = false,
-               disableMouse = false,
-               disableCombat = true
-          }, { animDict = "clothingshirt", anim = "try_shirt_positive_d", flags = 49 }, {}, {}, function()
+     QBCore.Functions.Progressbar("keep_gunrack_opening", 'Open', duration * 1000, false, false, {
+          disableMovement = true,
+          disableCarMovement = false,
+          disableMouse = false,
+          disableCombat = true
+     }, { animDict = "clothingshirt", anim = "try_shirt_positive_d", flags = 49 }, {}, {}, function()
           open_stash(backpack_metadata)
      end)
 end)
@@ -46,13 +45,12 @@ end
 
 RegisterNetEvent("keep-backpack:client:close", function(ID)
      local duration = Config.duration.close
-     QBCore.Functions.Progressbar("keep_backpack_close", 'Close', duration * 1000,
-          false, false, {
-               disableMovement = true,
-               disableCarMovement = false,
-               disableMouse = false,
-               disableCombat = true
-          }, { animDict = "clothingshirt", anim = "try_shirt_positive_d", flags = 49 }, {}, {}, function()
+     QBCore.Functions.Progressbar("keep_backpack_close", 'Close', duration * 1000, false, false, {
+          disableMovement = true,
+          disableCarMovement = false,
+          disableMouse = false,
+          disableCombat = true
+     }, { animDict = "clothingshirt", anim = "try_shirt_positive_d", flags = 49 }, {}, {}, function()
           close_stash(ID)
      end)
 end)
@@ -100,13 +98,12 @@ end)
 
 RegisterNetEvent("keep-backpack:client:lockpick", function(backpack_metadata)
      local duration = Config.duration.close
-     QBCore.Functions.Progressbar("keep_backpack_close", 'Lockpicking', 1 * 1000,
-          false, false, {
-               disableMovement = true,
-               disableCarMovement = false,
-               disableMouse = false,
-               disableCombat = true
-          }, {}, {}, {}, function()
+     QBCore.Functions.Progressbar("keep_backpack_close", 'Lockpicking', 1 * 1000, false, false, {
+          disableMovement = true,
+          disableCarMovement = false,
+          disableMouse = false,
+          disableCombat = true
+     }, {}, {}, {}, function()
           TriggerServerEvent('keep-backpack:server:open_backpack', backpack_metadata, true)
      end)
 end)
@@ -160,8 +157,7 @@ function AttachProp(model, bone, position)
      end
 
      active_prop = CreateObject(model_hash, _x, _y, _z + 0.2, true, true, true)
-     AttachEntityToEntity(active_prop, playerped, bone_index, position.x, position.y, position.z, position.x_rotation,
-          position.y_rotation, position.z_rotation, true, true, false, true, 1, true)
+     AttachEntityToEntity(active_prop, playerped, bone_index, position.x, position.y, position.z, position.x_rotation, position.y_rotation, position.z_rotation, true, true, false, true, 1, true)
      SetModelAsNoLongerNeeded(model)
      return active_prop
 end
@@ -195,8 +191,7 @@ function BODY:attach(backpack, slot)
           RemoveAnimDict(dict)
           Wait(50)
           self.bones[Bone].slot = slot
-          self.bones[Bone].current_active_porp = AttachProp(model, self.bones[Bone].bone,
-               backpack.prop.animation.attaching_position)
+          self.bones[Bone].current_active_porp = AttachProp(model, self.bones[Bone].bone, backpack.prop.animation.attaching_position)
      end
 end
 
@@ -240,33 +235,35 @@ end
 local function dosomething(current, p)
      local dif_ = difference(p, current)
 
-     for _, item in ipairs(dif_) do
+     for _, item in pairs(dif_) do
           if isItemBackpack(item.name) then
                local backpack = getBackpack(item.name)
-               if backpack.prop then
-                    BODY:cleanUpProps(item.slot)
-               elseif backpack.male then
-                    if BODY.bones['Back'].current_active_porp then
-                         TriggerEvent('qb-clothing:client:loadOutfit', {
-                              outfitData = backpack.male
-                         })
-                         BODY:remove('Back')
+               if backpack ~= nil then
+                    if backpack.prop then
+                         BODY:cleanUpProps(item.slot)
+                    elseif backpack.male then
+                         if BODY.bones['Back'].current_active_porp then
+                              TriggerEvent('qb-clothing:client:loadOutfit', {
+                                   outfitData = backpack.male
+                              })
+                              BODY:remove('Back')
+                         end
+                    elseif backpack.female then
+                         if BODY.bones['Back'].current_active_porp then
+                              TriggerEvent('qb-clothing:client:loadOutfit', {
+                                   outfitData = backpack.female
+                              })
+                              BODY:remove('Back')
+                         end
                     end
-               elseif backpack.female then
-                    if BODY.bones['Back'].current_active_porp then
-                         TriggerEvent('qb-clothing:client:loadOutfit', {
-                              outfitData = backpack.female
-                         })
-                         BODY:remove('Back')
-                    end
-               end
-               local PlayerPed = PlayerPedId()
-               local weapon = GetSelectedPedWeapon(PlayerPed)
-               local CurrentWeaponName = QBCore.Shared.Weapons[weapon]
-               if CurrentWeaponName ~= nil then
-                    if CurrentWeaponName.name:upper() ~= 'WEAPON_UNARMED' then
-                         if backpack.prop then
-                              BODY:cleanUpProps(item.slot)
+                    local PlayerPed = PlayerPedId()
+                    local weapon = GetSelectedPedWeapon(PlayerPed)
+                    local CurrentWeaponName = QBCore.Shared.Weapons[weapon]
+                    if CurrentWeaponName ~= nil then
+                         if CurrentWeaponName.name:upper() ~= 'WEAPON_UNARMED' then
+                              if backpack.prop then
+                                   BODY:cleanUpProps(item.slot)
+                              end
                          end
                     end
                end
@@ -279,23 +276,25 @@ local function dosomething(current, p)
                local weapon = GetSelectedPedWeapon(PlayerPed)
                local CurrentWeaponName = QBCore.Shared.Weapons[weapon]
                local backpack = getBackpack(item.name)
-               if CurrentWeaponName ~= nil and CurrentWeaponName.name:upper() ~= 'WEAPON_UNARMED' and
-                   backpack.remove_when_using_weapon then
-                    if backpack.prop then
-                         BODY:cleanUpProps(item.slot)
-                    end
-               elseif backpack.prop then
-                    BODY:attach(backpack, item.slot)
-               elseif backpack.male or backpack.female then
-                    if not BODY.bones['Back'].current_active_porp then
-                         local PlayerData = QBCore.Functions.GetPlayerData()
-                         if PlayerData.charinfo.gender == 0 then
-                              TriggerEvent('qb-clothing:client:loadOutfit', { outfitData = backpack.male })
-                         else
-                              TriggerEvent('qb-clothing:client:loadOutfit', { outfitData = backpack.female })
+               if backpack ~= nil then
+                    if CurrentWeaponName ~= nil and CurrentWeaponName.name:upper() ~= 'WEAPON_UNARMED' and
+                        backpack.remove_when_using_weapon then
+                         if backpack.prop then
+                              BODY:cleanUpProps(item.slot)
                          end
-                         BODY.bones['Back'].current_active_porp = 54646 -- something random
-                         BODY.bones['Back'].slot = item.slot
+                    elseif backpack.prop then
+                         BODY:attach(backpack, item.slot)
+                    elseif backpack.male or backpack.female then
+                         if not BODY.bones['Back'].current_active_porp then
+                              local PlayerData = QBCore.Functions.GetPlayerData()
+                              if PlayerData.charinfo.gender == 0 then
+                                   TriggerEvent('qb-clothing:client:loadOutfit', { outfitData = backpack.male })
+                              else
+                                   TriggerEvent('qb-clothing:client:loadOutfit', { outfitData = backpack.female })
+                              end
+                              BODY.bones['Back'].current_active_porp = 54646 -- something random
+                              BODY.bones['Back'].slot = item.slot
+                         end
                     end
                end
           end
@@ -335,3 +334,11 @@ function StartThread()
           end
      end)
 end
+
+AddEventHandler('onResourceStop', function(resource)
+     if resource == GetCurrentResourceName() then
+          for index, value in ipairs(Config.Hotbar) do
+               BODY:cleanUpProps(index)
+          end
+     end
+end)

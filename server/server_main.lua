@@ -26,11 +26,11 @@ end
 
 local function str_split(inputstr, sep)
      if sep == nil then
-        sep = "%s"
+          sep = "%s"
      end
-     local t={}
-     for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-        table.insert(t, str)
+     local t = {}
+     for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
+          table.insert(t, str)
      end
      return t
 end
@@ -62,8 +62,7 @@ local function SaveStashItems(stashId, items)
           for slot, item in pairs(items) do
                item.description = nil
           end
-          MySQL.Async.insert('INSERT INTO stashitems (stash, items) VALUES (:stash, :items) ON DUPLICATE KEY UPDATE items = :items'
-               , {
+          MySQL.Async.insert('INSERT INTO stashitems (stash, items) VALUES (:stash, :items) ON DUPLICATE KEY UPDATE items = :items', {
                ['stash'] = stashId,
                ['items'] = json.encode(items)
           })
@@ -80,7 +79,6 @@ local function isBackPack(item)
 end
 
 local function isBlacklisted(item, backpackName)
-
      -- if Config.Blacklist_items have backpack config and item is blacklisted in backpack config
      if Config.Blacklist_items[backpackName] and Config.Blacklist_items[backpackName][item.name] then
           return true
@@ -111,16 +109,15 @@ local function getNonBackpackItems(source, items, backpack)
           local is_Whitelisted = isWhitelisted(item, backpack.item.name)
           local is_B_Pack = isBackPack(item)
           local is_B_Listed = isBlacklisted(item, backpack.item.name)
-          if is_B_Pack or is_B_Listed or not is_Whitelisted then
+          if is_B_Pack or (is_B_Listed or not is_Whitelisted) then
+               print(item.name, item.amount)
                Player.Functions.AddItem(item.name, item.amount, nil, item.info)
                TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items[item.name], "add")
                if is_B_Pack then
-                    TriggerClientEvent('QBCore:Notify', source, "You can not have a backpack in another backpack!",
-                         "error")
+                    TriggerClientEvent('QBCore:Notify', source, "You can not have a backpack in another backpack!", "error")
                end
                if is_B_Listed or not is_Whitelisted then
-                    TriggerClientEvent('QBCore:Notify', source, "You can not put this item inside your backpack!",
-                         "error")
+                    TriggerClientEvent('QBCore:Notify', source, "You can not put this item inside your backpack!", "error")
                end
           else
                non_bacpack_items[#non_bacpack_items + 1] = item
@@ -271,20 +268,22 @@ QBCore.Functions.CreateUseableItem('briefcaselockpicker', function(source, item)
 end)
 
 RegisterNetEvent('keep-backpack:server:add_password', function(data)
-     local Player = QBCore.Functions.GetPlayer(source)
+     local src = source
+     local Player = QBCore.Functions.GetPlayer(src)
      local backpack = get_backpack(Player, data.ID)
      if backpack then
           save_password(Player, backpack.item, data.password)
-          TriggerClientEvent('QBCore:Notify', source, 'Added password', "success")
+          TriggerClientEvent('QBCore:Notify', src, 'Added password', "success")
           return
      else
-          TriggerClientEvent('QBCore:Notify', source, 'Failed to add password', "error")
+          TriggerClientEvent('QBCore:Notify', src, 'Failed to add password', "error")
      end
 end)
 
 RegisterNetEvent('keep-backpack:server:open_backpack', function(backpack_metadata, lockpick)
      local Player = QBCore.Functions.GetPlayer(backpack_metadata.source)
      local backpack = get_backpack(Player, backpack_metadata.ID)
+     if not backpack then return end
      local safe_data = {
           ID = backpack.item.info.ID,
           setting = backpack.setting
