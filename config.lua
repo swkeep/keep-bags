@@ -104,8 +104,6 @@ Config.items = {
           female = {
                ["bag"] = { item = 45, texture = 0 }
           }
-
-
      },
      ['backpack2'] = {
           slots = 6,
@@ -121,7 +119,8 @@ Config.items = {
           slots = 3,
           size = 10000,
           locked = 'password',
-          prop = props.suitcase2
+          prop = props.suitcase2,
+          remove_when_using_weapon = true
      },
      ['paramedicbag'] = {
           slots = 10,

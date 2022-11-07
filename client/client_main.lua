@@ -245,12 +245,17 @@ local function dosomething(current, p)
                local backpack = getBackpack(item.name)
                if backpack.prop then
                     BODY:cleanUpProps(item.slot)
-               elseif backpack.male or backpack.female then
+               elseif backpack.male then
                     if BODY.bones['Back'].current_active_porp then
                          TriggerEvent('qb-clothing:client:loadOutfit', {
-                              outfitData = {
-                                   ["bag"] = { item = -1, texture = 0 }
-                              }
+                              outfitData = backpack.male
+                         })
+                         BODY:remove('Back')
+                    end
+               elseif backpack.female then
+                    if BODY.bones['Back'].current_active_porp then
+                         TriggerEvent('qb-clothing:client:loadOutfit', {
+                              outfitData = backpack.female
                          })
                          BODY:remove('Back')
                     end
@@ -268,13 +273,14 @@ local function dosomething(current, p)
           end
      end
 
-     for _, item in ipairs(current) do
+     for _, item in pairs(current) do
           if item ~= 'empty' and isItemBackpack(item.name) then
                local PlayerPed = PlayerPedId()
                local weapon = GetSelectedPedWeapon(PlayerPed)
                local CurrentWeaponName = QBCore.Shared.Weapons[weapon]
                local backpack = getBackpack(item.name)
-               if CurrentWeaponName ~= nil and CurrentWeaponName.name:upper() ~= 'WEAPON_UNARMED' then
+               if CurrentWeaponName ~= nil and CurrentWeaponName.name:upper() ~= 'WEAPON_UNARMED' and
+                   backpack.remove_when_using_weapon then
                     if backpack.prop then
                          BODY:cleanUpProps(item.slot)
                     end
