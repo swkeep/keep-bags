@@ -142,12 +142,14 @@ Config.items = {
      ['paramedicbag'] = {
           slots = 10,
           size = 50000,
-          prop = props.paramedicbag
+          prop = props.paramedicbag,
+          remove_when_using_weapon = true
      },
      ['fishicebox'] = {
           slots = 40,
           size = 200000,
-          prop = props.fishicebox
+          prop = props.fishicebox,
+          remove_when_using_weapon = true
      },
 }
 

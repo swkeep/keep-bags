@@ -241,17 +241,12 @@ local function dosomething(current, p)
                if backpack ~= nil then
                     if backpack.prop then
                          BODY:cleanUpProps(item.slot)
-                    elseif backpack.male then
+                    elseif backpack.male or backpack.female then
                          if BODY.bones['Back'].current_active_porp then
                               TriggerEvent('qb-clothing:client:loadOutfit', {
-                                   outfitData = backpack.male
-                              })
-                              BODY:remove('Back')
-                         end
-                    elseif backpack.female then
-                         if BODY.bones['Back'].current_active_porp then
-                              TriggerEvent('qb-clothing:client:loadOutfit', {
-                                   outfitData = backpack.female
+                                   outfitData = {
+                                        ["bag"] = { item = -1, texture = 0 }
+                                   }
                               })
                               BODY:remove('Back')
                          end
