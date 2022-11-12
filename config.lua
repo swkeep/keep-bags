@@ -115,7 +115,7 @@ Config.items = {
           slots = 10,
           size = 100000,
           male = {
-               ["bag"] = { item = 85, texture = 12 }
+               ["bag"] = { item = 31, texture = 0 } -- if cloth are under other categories change the `["bag"]` or something else for example `["hat"]` = { item = 2, texture = 0 } 
           },
 
           female = {

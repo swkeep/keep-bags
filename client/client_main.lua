@@ -243,11 +243,28 @@ local function dosomething(current, p)
                          BODY:cleanUpProps(item.slot)
                     elseif backpack.male or backpack.female then
                          if BODY.bones['Back'].current_active_porp then
-                              TriggerEvent('qb-clothing:client:loadOutfit', {
-                                   outfitData = {
-                                        ["bag"] = { item = -1, texture = 0 }
-                                   }
-                              })
+                              local PlayerData = QBCore.Functions.GetPlayerData()
+                              if PlayerData.charinfo.gender == 0 then
+                                   -- i'm too lazy to add deep copy :)
+                                   local outfitData = backpack.male
+                                   local type 
+                                   for key, _ in pairs(outfitData) do
+                                        type = key
+                                   end
+                                   
+                                   TriggerEvent('qb-clothing:client:loadOutfit', {
+                                        outfitData = {[type] = {item = -1 ,texture = 0}}
+                                   })
+                              else
+                                   local outfitData = (backpack.female)
+                                   local type 
+                                   for key, _ in pairs(outfitData) do
+                                        type = key
+                                   end
+                                   TriggerEvent('qb-clothing:client:loadOutfit', {
+                                        outfitData = {[type] = {item = -1 ,texture = 0}}
+                                   })
+                              end
                               BODY:remove('Back')
                          end
                     end
