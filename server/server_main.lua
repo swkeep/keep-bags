@@ -102,20 +102,41 @@ local function isWhitelisted(item, backpackName)
      return true
 end
 
-local function getNonBackpackItems(source, items, backpack)
+local function getNonBackpackItems(source, items, backpack, backpackId)
      local Player = QBCore.Functions.GetPlayer(source)
      local non_bacpack_items = {}
+
+     -- when someone puts backpack inside itself backpack is going to be nil 
+     -- for this reason we need to check items again 
+     local backpack_type = nil
+     if not backpack then 
+          for key, item in pairs(items) do
+               local is_B_Pack = isBackPack(item)
+               if is_B_Pack then
+                    if item.info.ID == backpackId then 
+                         backpack_type = item.name
+                    end
+                    Player.Functions.AddItem(item.name, item.amount, nil, item.info)
+                    TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items[item.name], "add")
+                    TriggerClientEvent('QBCore:Notify', source, "You can not have a backpack in another backpack!", "error")
+                    items[key] = nil
+               end
+          end
+     end
+
      for key, item in pairs(items) do
-          local is_Whitelisted = isWhitelisted(item, backpack.item.name)
-          local is_B_Pack = isBackPack(item)
-          local is_B_Listed = isBlacklisted(item, backpack.item.name)
-          if is_B_Pack or (is_B_Listed or not is_Whitelisted) then
-               print(item.name, item.amount)
+          if not backpack or not backpack.item then
+               backpack = {
+                    item = {
+                         name = backpack_type
+                    }
+               }
+          end
+          local is_Whitelisted = isWhitelisted(item, backpack.item.name )
+          local is_B_Listed = isBlacklisted(item, backpack.item.name )
+          if is_B_Listed or not is_Whitelisted then
                Player.Functions.AddItem(item.name, item.amount, nil, item.info)
                TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items[item.name], "add")
-               if is_B_Pack then
-                    TriggerClientEvent('QBCore:Notify', source, "You can not have a backpack in another backpack!", "error")
-               end
                if is_B_Listed or not is_Whitelisted then
                     TriggerClientEvent('QBCore:Notify', source, "You can not put this item inside your backpack!", "error")
                end
@@ -133,7 +154,7 @@ RegisterNetEvent('keep-backpack:server:saveBackpack', function(source, stashId, 
      local backpackId = stashIdData[2]
      local backpack = get_backpack(Player, backpackId)
 
-     local non_bacpack_items = getNonBackpackItems(source, items, backpack)
+     local non_bacpack_items = getNonBackpackItems(source, items, backpack, backpackId)
      SaveStashItems(stashId, non_bacpack_items)
      cb(true)
 end)

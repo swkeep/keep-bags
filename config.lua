@@ -158,9 +158,9 @@ Config.Blacklist_items = {
      list = {
           'weapon_rpg'
      },
-     -- backpack2 = {
-     --      ['lockpick'] = true
-     -- }
+     backpack1 = {
+          ['lockpick'] = true
+     }
 }
 
 Config.Whitelist_items = {
@@ -169,21 +169,8 @@ Config.Whitelist_items = {
           ['bandage'] = true,
           ['ifaks'] = true,
           ['painkillers'] = true,
-          ['walkstick'] = true,
      },
-     fishicebox = {
-          ['stingray'] = true,
-          ['flounder'] = true,
-          ['codfish'] = true,
-          ['mackerel'] = true,
-          ['bass'] = true,
-          ['fishingtin'] = true,
-          ['fishingboot'] = true,
-          ['killerwhale'] = true,
-          ['dolphin'] = true,
-          ['sharkhammer'] = true,
-          ['sharktiger'] = true,
-     },
+     fishicebox = {},
 }
 
 Config.whitelist = {
