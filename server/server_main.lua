@@ -109,7 +109,7 @@ local function getNonBackpackItems(source, items, backpack, backpackId)
      -- when someone puts backpack inside itself backpack is going to be nil 
      -- for this reason we need to check items again 
      local backpack_type = nil
-     if not backpack then 
+     if backpack then 
           for key, item in pairs(items) do
                local is_B_Pack = isBackPack(item)
                if is_B_Pack then
@@ -147,7 +147,7 @@ local function getNonBackpackItems(source, items, backpack, backpackId)
      return non_bacpack_items
 end
 
-RegisterNetEvent('keep-backpack:server:saveBackpack', function(source, stashId, items, cb)
+RegisterNetEvent('keep-backpack:server:saveBackpack', function(source, stashId, items)
      local Player = QBCore.Functions.GetPlayer(source)
 
      local stashIdData = str_split(stashId, "_")
@@ -156,7 +156,6 @@ RegisterNetEvent('keep-backpack:server:saveBackpack', function(source, stashId, 
 
      local non_bacpack_items = getNonBackpackItems(source, items, backpack, backpackId)
      SaveStashItems(stashId, non_bacpack_items)
-     cb(true)
 end)
 
 ------------------------------------------ create items -------------------------------------------------

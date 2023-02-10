@@ -105,6 +105,7 @@
 - 1: backpack in backpack
 - open qb-inventory/server/main.lua
 - find this event 'inventory:server:SaveInventory'
+- add `local src = source` at top of this event 
 - find 'elseif type == "stash" then' it should look like this:
 
 ```lua
@@ -119,9 +120,8 @@ elseif type == "drop" then
 elseif type == "stash" then
      local indexstart, indexend = string.find(id, 'Backpack_')
      if indexstart and indexend then
-          TriggerEvent('keep-backpack:server:saveBackpack', source, id, Stashes[id].items, function(close)
-               Stashes[id].isOpen = close
-          end)
+          TriggerEvent('keep-backpack:server:saveBackpack', source, id, Stashes[id].items)
+          Stashes[id].isOpen = true
           return
      end
      SaveStashItems(id, Stashes[id].items)
