@@ -1,3 +1,20 @@
+-- cache natives
+local HasAnimDictLoaded = HasAnimDictLoaded
+local RequestAnimDict = RequestAnimDict
+local GetHashKey = GetHashKey
+local CreateObject = CreateObject
+local AttachEntityToEntity = AttachEntityToEntity
+local SetModelAsNoLongerNeeded = SetModelAsNoLongerNeeded
+local ClearPedTasks = ClearPedTasks
+local TaskPlayAnim = TaskPlayAnim
+local RemoveAnimDict = RemoveAnimDict
+local DeleteObject = DeleteObject
+local StopAnimTask = StopAnimTask
+local SetEntityAlpha = SetEntityAlpha
+local DoesEntityExist = DoesEntityExist
+local IsEntityAttached = IsEntityAttached
+--
+
 BodyAttachment = {
     boneInfo = {
         ["right_hand"] = {
@@ -30,8 +47,9 @@ local function LoadAnimationDictionary(animationDict)
 end
 
 local function LoadPropModel(modelName)
-    while not HasModelLoaded(GetHashKey(modelName)) do
-        RequestModel(GetHashKey(modelName))
+    local modelHash = GetHashKey(modelName)
+    while not HasModelLoaded(modelHash) do
+        RequestModel(modelHash)
         Wait(10)
     end
 end
