@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  create-release:
+    name: Build and Create Tagged Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Checkout source code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - name: Bump manifest version
+        run: node .github/actions/version.cjs
+        env:
+          RELEASE_VERSION: ${{ github.ref_name }}
+
+      - name: Push manifest change
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: fxmanifest.lua
+          push: true
+          # author_name: Manifest Bumper
+          # author_email: 41898282+github-actions[bot]@users.noreply.github.com
+          message: "chore: bump manifest version to ${{ github.ref_name }}"
+
+      - name: Update tag ref
+        uses: EndBug/latest-tag@latest
+        with:
+          tag-name: ${{ github.ref_name }}
+
+      - name: Bundle files
+        run: |
+          mkdir -p ./temp
+          cp ./{LICENSE,README.md,fxmanifest.lua,config.lua} ./temp
+          cp -r ./client ./temp/client
+          cp -r ./inventoryimages ./temp/inventoryimages
+          cp -r ./locale ./temp/locale
+          cp -r ./server ./temp/server
+          cp -r ./shared ./temp/shared
+
+      - name: Zip files
+        run: |
+          cd ./temp && zip -r ../${{ github.event.repository.name }}.zip ./
+
+      - name: Create Release
+        uses: "marvinpinto/action-automatic-releases@v1.2.1"
+        id: auto_release
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          files: ${{ github.event.repository.name }}.zip
+          title: ${{ env.RELEASE_VERSION }}
+          prerelease: false
+
+        env:
+          CI: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
