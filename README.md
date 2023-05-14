@@ -199,6 +199,96 @@ Follow the steps mentioned below to install keep-backpack:
 },
 ```
 
+## ESX (ox_inventory)
+
+```lua
+["backpack1"] = {
+     label = "backpack1",
+     weight = 15,
+     stack = false,
+     close = true,
+     description = "A stylish backpack"
+},
+["backpack2"] = {
+     label = "backpack2",
+     weight = 15,
+     stack = false,
+     close = true,
+     description = "A stylish backpack"
+},
+["backpack3"] = {
+     label = "backpack3",
+     weight = 15,
+     stack = false,
+     close = true,
+     description = "A stylish backpack"
+},
+["backpack4"] = {
+     label = "backpack4",
+     weight = 15,
+     stack = false,
+     close = true,
+     description = "A stylish backpack"
+},
+["backpack5"] = {
+     label = "backpack5",
+     weight = 15,
+     stack = false,
+     close = true,
+     description = "A stylish backpack"
+},
+["backpack6"] = {
+     label = "backpack6",
+     weight = 15,
+     stack = false,
+     close = true,
+     description = "A stylish backpack"
+},
+["backpack7"] = {
+     label = "backpack7",
+     weight = 15,
+     stack = false,
+     close = true,
+     description = "A stylish backpack"
+},
+["duffle1"] = {
+     label = "Duffle bag",
+     weight = 15,
+     stack = false,
+     close = true,
+     description = "A stylish duffle bag"
+},
+["duffle2"] = {
+     label = "Duffle bag",
+     weight = 15,
+     stack = false,
+     close = true,
+     description = "A stylish duffle bag"
+},
+["briefcase"] = {
+     label = "Briefcase",
+     weight = 10,
+     stack = false,
+     close = true,
+     description = "A portable rectangular case used for carrying important documents, files, or other personal belongings."
+},
+["paramedicbag"] = {
+     label = "Paramedic bag",
+     weight = 5,
+     stack = false,
+     close = true,
+     description = "A medical bag used by paramedics, containing essential supplies for emergency care."
+},
+
+["briefcaselockpicker"] = {
+     label = "Briefcase Lockpicker",
+     weight = 0.5,
+     stack = true,
+     close = true,
+     description = "Briefcase Lockpicker"
+}
+```
+
 # Step 2: Fix for Exploits
 
 The following steps will guide you on how to fix a specific exploit related to backpacks within backpacks.
