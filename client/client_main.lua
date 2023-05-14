@@ -59,7 +59,9 @@ Harmony.Event.onNet('client:lockpick:menu', function(items)
                icon = 'fa-solid fa-boxes-packing',
                action = function()
                     Harmony.Progressbar(Locale.get('progress.lockpicking'):format(value.slot), Config.duration.lockpick or 1, function()
-                         Harmony.Event.emitNet('server:lockpick:open', value.name, value.info.id)
+                         local metadata = Harmony.Item.Metadata.Get(value)
+
+                         Harmony.Event.emitNet('server:lockpick:open', value.name, metadata.id)
                     end, function()
                          Harmony.Player.Notify(Locale.get('errors.cancelled'), 'error')
                     end)

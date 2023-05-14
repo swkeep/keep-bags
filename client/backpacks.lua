@@ -79,11 +79,14 @@ function UpdateBackpacksData(updated_inventory_data)
         local item = updated_inventory_data[i]
 
         if item and IsBackpack(item) then
-            if item.info and item.info.id then
-                updated_backpacks.slots[item.slot] = item.info.id
-                updated_backpacks.id[item.info.id] = item.slot
+            local metadata = Harmony.Item.Metadata.Get(item)
+            local hasId = Harmony.Item.Metadata.HasId(metadata)
+
+            if metadata and hasId then
+                updated_backpacks.slots[item.slot] = item.metadata.id
+                updated_backpacks.id[item.metadata.id] = item.slot
                 updated_backpacks.index[#updated_backpacks.index + 1] = item.slot
-                updated_backpacks.items[item.info.id] = item
+                updated_backpacks.items[item.metadata.id] = item
                 updated_backpacks.count = updated_backpacks.count + 1
             end
         end
