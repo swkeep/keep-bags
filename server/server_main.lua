@@ -7,22 +7,16 @@
 --                             | |
 --                             |_|
 -- https://github.com/swkeep
+local resource_name = GetCurrentResourceName()
+local Harmony = exports["keep-harmony"]:GetCoreObject()
+local Shared = exports["keep-harmony"]:Shared()
+local CreateUseableItem = Harmony.Item.CreateUseableItem
+local RandomId = Shared.RandomId
 
-local QBCore = exports['qb-core']:GetCoreObject()
-
+local Backpack = {
+     data = {}
+}
 ------------------------------------------ Functions -------------------------------------------------
-
-local function save_info(Player, item, ID)
-     if Player.PlayerData.items[item.slot] then
-          if not (type(Player.PlayerData.items[item.slot].info) == "table") then
-               Player.PlayerData.items[item.slot].info = {}
-               Player.PlayerData.items[item.slot].info.ID = ID
-          else
-               Player.PlayerData.items[item.slot].info.ID = ID
-          end
-     end
-     Player.Functions.SetInventory(Player.PlayerData.items, true)
-end
 
 local function str_split(inputstr, sep)
      if sep == nil then
@@ -33,28 +27,6 @@ local function str_split(inputstr, sep)
           table.insert(t, str)
      end
      return t
-end
-
-local function save_password(Player, item, password)
-     if Player.PlayerData.items[item.slot] then
-          Player.PlayerData.items[item.slot].info.password = password
-     end
-     Player.Functions.SetInventory(Player.PlayerData.items, true)
-end
-
-local function get_backpack(Player, ID)
-     for key, value in pairs(Config.items) do
-          local tmp = Player.Functions.GetItemsByName(key)
-          for k, item in pairs(tmp) do
-               if item.info.ID == ID then
-                    return {
-                         item = item,
-                         setting = value
-                    }
-               end
-          end
-     end
-     return
 end
 
 local function SaveStashItems(stashId, items)
@@ -69,256 +41,261 @@ local function SaveStashItems(stashId, items)
      end
 end
 
-local function isBackPack(item)
-     for item_name, _ in pairs(Config.items) do
-          if item.name == item_name then
-               return true
-          end
+local function getItemAmount(item)
+     if item.amount then
+          return item.amount
+     elseif item.count then
+          return item.count
+     else
+          return 0
      end
-     return false
 end
 
-local function isBlacklisted(item, backpackName)
-     -- if Config.Blacklist_items have backpack config and item is blacklisted in backpack config
-     if Config.Blacklist_items[backpackName] and Config.Blacklist_items[backpackName][item.name] then
-          return true
-     end
+local function giveItemToPlayer(source, Player, item, success, fail)
+     local itemMetadata = Harmony.Item.Metadata.Get(item) or {}
+     local amount = getItemAmount(item)
 
-     if not Config.Blacklist_items.active then return false end
-     for _, item_name in pairs(Config.Blacklist_items.list) do
-          if item.name == item_name then
-               return true
-          end
-     end
-     return false
+     Harmony.Player.GiveItem(source, Player, item.name, amount, nil, itemMetadata, success, fail)
 end
 
-local function isWhitelisted(item, backpackName)
-     -- if Config.Whitelist_items don't have backpack config, then the item is whitlisted by default.
-     if not Config.Whitelist_items[backpackName] then return true end
-     -- if item is not whitelisted
-     if not Config.Whitelist_items[backpackName][item.name] then return false end
-     -- item is whitelisted from config
-     return true
-end
-
-local function getNonBackpackItems(source, items, backpack, backpackId)
-     local Player = QBCore.Functions.GetPlayer(source)
-     local non_bacpack_items = {}
-
-     -- when someone puts backpack inside itself backpack is going to be nil 
-     -- for this reason we need to check items again 
-     local backpack_type = nil
-     if backpack then 
-          for key, item in pairs(items) do
-               local is_B_Pack = isBackPack(item)
-               if is_B_Pack then
-                    if item.info.ID == backpackId then 
-                         backpack_type = item.name
-                    end
-                    Player.Functions.AddItem(item.name, item.amount, nil, item.info)
-                    TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items[item.name], "add")
-                    TriggerClientEvent('QBCore:Notify', source, "You can not have a backpack in another backpack!", "error")
-                    items[key] = nil
-               end
+local function filter(tbl, predicate)
+     local result = {}
+     for k, v in pairs(tbl) do
+          if predicate(v) then
+               result[k] = v
           end
      end
-
-     for key, item in pairs(items) do
-          if not backpack or not backpack.item then
-               backpack = {
-                    item = {
-                         name = backpack_type
-                    }
-               }
-          end
-          local is_Whitelisted = isWhitelisted(item, backpack.item.name )
-          local is_B_Listed = isBlacklisted(item, backpack.item.name )
-          if is_B_Listed or not is_Whitelisted then
-               Player.Functions.AddItem(item.name, item.amount, nil, item.info)
-               TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items[item.name], "add")
-               if is_B_Listed or not is_Whitelisted then
-                    TriggerClientEvent('QBCore:Notify', source, "You can not put this item inside your backpack!", "error")
-               end
-          else
-               non_bacpack_items[#non_bacpack_items + 1] = item
-          end
-     end
-     return non_bacpack_items
+     return result
 end
 
-RegisterNetEvent('keep-backpack:server:saveBackpack', function(source, stashId, items)
-     local Player = QBCore.Functions.GetPlayer(source)
-
-     local stashIdData = str_split(stashId, "_")
-     local backpackId = stashIdData[2]
-     local backpack = get_backpack(Player, backpackId)
-
-     local non_bacpack_items = getNonBackpackItems(source, items, backpack, backpackId)
-     SaveStashItems(stashId, non_bacpack_items)
-end)
-
------------------------------------------- create items -------------------------------------------------
-
-local function isOnHotbar(slot)
-     for _, _slot in pairs(Config.Hotbar) do
-          if slot == _slot then
-               return true
-          end
-     end
-     return false
-end
-
-local function t_size(table)
+local function tableSize(table)
      local count = 0
-     for _ in pairs(table) do count = count + 1 end
+     for _ in pairs(table) do
+          count = count + 1
+     end
      return count
 end
 
-local function count_backpacks_of_same_type(Player, item)
-     local item_name = item.name
-     local backpacks = Player.Functions.GetItemsByName(item_name)
-     return t_size(backpacks)
+local function isMultipleBackpacksNotAllowed()
+     return Config.not_allowed_to_carry_multiple_backpacks or false
 end
 
-local function not_allowed_to_carry_multiple_backpacks()
-     if not Config.not_allowed_to_carry_multiple_backpacks then return false end
-     return true
-end
-
-local function does_have_multiple_backpacks(Player, item)
-     if not_allowed_to_carry_multiple_backpacks() then
-          if count_backpacks_of_same_type(Player, item) > Config.maximum_allowed then
-               return true
-          end
+local function hasTooManyBackpacks(Player, item)
+     if not isMultipleBackpacksNotAllowed() then
           return false
      end
-     return false
+
+     local backpacks = Player.Functions.GetItemsByName(item.name)
+     local numBackpacksOfType = tableSize(backpacks)
+
+     return numBackpacksOfType > Config.maximum_allowed
 end
 
-for item_name, value in pairs(Config.items) do
-     QBCore.Functions.CreateUseableItem(item_name, function(source, item)
-          local Player = QBCore.Functions.GetPlayer(source)
-          if not Player then return end
-          local metadata = {}
-          if item.info == '' or (type(item.info) == "table" and item.info.ID == nil) then
-               metadata.ID = RandomID(10)
-               save_info(Player, item, metadata.ID)
-               if value.locked then
-                    TriggerClientEvent('keep-backpack:client:create_password', source, metadata.ID)
+local function GetBackpackConfig(item_name)
+     return Config.Backpacks[item_name]
+end
+
+local function checkForNestedBackpacks(stash_items, backpack_id, source, Player)
+     local has_backpack_inception = false
+     for key, item in pairs(stash_items) do
+          if IsBackpack(item) then
+               local metadata = Harmony.Item.Metadata.Get(item)
+
+               if metadata.id == backpack_id then
+                    Harmony.Player.Notify(source, Locale.get('errors.backpack_self_insertion'), 'primary')
+                    giveItemToPlayer(source, Player, item)
+                    stash_items[key] = nil
+                    has_backpack_inception = true
+                    break
                end
-               return
           end
-          metadata.ID = item.info.ID
-          metadata.source = source
-          metadata.password = nil
-          metadata.locked = value.locked or false
+     end
 
-          if does_have_multiple_backpacks(Player, item) then
-               TriggerClientEvent('QBCore:Notify', source, 'Action not allowd when carrying multiple backpacks!', "error")
-               return
-          end
-
-          if isOnHotbar(item.slot) then
-               -- fix to create blank password
-               if item.info.password == nil or item.info.password == '' then
-                    if value.locked then
-                         TriggerClientEvent('keep-backpack:client:create_password', source, metadata.ID)
-                         return
-                    end
-               end
-               -- fix end
-               TriggerClientEvent('keep-backpack:client:enter_password', source, metadata)
-          else
-               TriggerClientEvent('QBCore:Notify', source, 'Backpack is not on your hand!', "error")
-          end
-     end)
+     return has_backpack_inception
 end
 
---- lockpick
-local function pickable()
-     local tmp = {}
-     for key, value in pairs(Config.items) do
-          if value.locked then
-               tmp[#tmp + 1] = key
-          end
+local function checkForOtherBackpacks(stash_items, source, Player)
+     local has_other_backpacks = false
+     local backpack_items = filter(stash_items, IsBackpack)
+
+     for key, item in pairs(backpack_items) do
+          Harmony.Player.Notify(source, Locale.get('errors.backpack_rule_breaker'), 'primary')
+          giveItemToPlayer(source, Player, item)
+          stash_items[key] = nil
+          has_other_backpacks = true
      end
-     return tmp
+
+     return has_other_backpacks
 end
 
-local function isWhitelisted(Player)
-     if not Config.whitelist.lockpick.active then return true end
-     local cid = Player.PlayerData.citizenid
-     local jobname = Player.PlayerData.job.name
-
-     for key, w_cid in pairs(Config.whitelist.lockpick.citizenid) do
-          if w_cid == cid then
-               return true
-          end
-     end
-
-     for key, w_job in pairs(Config.whitelist.lockpick.jobs) do
-          if w_job == jobname then
-               return true
-          end
-     end
-     return false
-end
-
-QBCore.Functions.CreateUseableItem('briefcaselockpicker', function(source, item)
-     local Player = QBCore.Functions.GetPlayer(source)
-     if not Player then return end
-     if not isWhitelisted(Player) then
-          TriggerClientEvent('QBCore:Notify', source, 'You can not use this item!', "error")
-          return
-     end
-     local picables = pickable()
-     for _, name in pairs(picables) do
-          local _item = Player.Functions.GetItemByName(name)
-          local metadata = {}
-          metadata.ID = _item.info.ID
-          metadata.source = source
-          metadata.password = nil
-          metadata.locked = true
-          TriggerClientEvent('keep-backpack:client:lockpick', source, metadata)
-          Player.Functions.RemoveItem('briefcaselockpicker', 1)
-          TriggerClientEvent('qb-inventory:client:ItemBox', source, QBCore.Shared.Items['briefcaselockpicker'], "remove")
-          return
-     end
-end)
-
-RegisterNetEvent('keep-backpack:server:add_password', function(data)
-     local src = source
-     local Player = QBCore.Functions.GetPlayer(src)
-     local backpack = get_backpack(Player, data.ID)
-     if backpack then
-          save_password(Player, backpack.item, data.password)
-          TriggerClientEvent('QBCore:Notify', src, 'Added password', "success")
-          return
+local function filterValidItems(stash_items, backpack_conf)
+     local valid_items
+     if backpack_conf.whitelist then
+          valid_items = filter(stash_items, function(item) return backpack_conf.whitelist[item.name] end)
+     elseif backpack_conf.blacklist then
+          valid_items = filter(stash_items, function(item) return not backpack_conf.blacklist[item.name] end)
      else
-          TriggerClientEvent('QBCore:Notify', src, 'Failed to add password', "error")
+          valid_items = stash_items
      end
-end)
 
-RegisterNetEvent('keep-backpack:server:open_backpack', function(backpack_metadata, lockpick)
-     local Player = QBCore.Functions.GetPlayer(backpack_metadata.source)
-     local backpack = get_backpack(Player, backpack_metadata.ID)
-     if not backpack then return end
-     local safe_data = {
-          ID = backpack.item.info.ID,
-          setting = backpack.setting
+     return valid_items
+end
+
+local function notifyAndReturnInvalidItems(stash_items, valid_items, Player, source)
+     -- notify and return invalid items to owner
+     -- items are sorted by their slotIndex
+     for slot, item in pairs(stash_items) do
+          if not valid_items[slot] then
+               Harmony.Player.Notify(source, Locale.get('errors.backpack_crammed'):format(item.name), 'primary')
+               giveItemToPlayer(source, Player, item)
+               stash_items[slot] = nil
+          end
+     end
+end
+
+function open_backpack(source, id, item_name)
+     local backpack_conf = GetBackpackConfig(item_name)
+
+     Harmony.Stash('Backpack_', id).Open(source, {
+          metadata = {
+               size = backpack_conf.size or 10000,
+               slots = backpack_conf.slots or 6,
+          },
+          duration = Config.duration.open
+     }, true, { animDict = "clothingshirt", anim = "try_shirt_positive_d", flags = 49 })
+end
+
+local function backpack_use(source, item_name, backpack_conf, item_ref)
+     local Player = Harmony.Player.Object(source)
+     if not Player then return end
+     local Identifier = Harmony.Player.Identifier(Player)
+     local Hash = joaat(Identifier)
+     local metadata = Harmony.Item.Metadata.Get(item_ref)
+
+     if type(metadata) == 'table' and metadata.ID then
+          -- check for migration
+          metadata = {
+               id = metadata.ID,
+               password = metadata.password
+          }
+          item_ref = Harmony.Item.Metadata.Prepare(item_ref, metadata)
+          Harmony.Item.Metadata.Save(Player, item_ref)
+     end
+
+     if not Harmony.Item.Metadata.HasId(metadata) then
+          metadata = {
+               id = Hash .. '_' .. RandomId(10),
+          }
+          item_ref = Harmony.Item.Metadata.Prepare(item_ref, metadata)
+          Harmony.Item.Metadata.Save(Player, item_ref)
+          Harmony.Player.Notify(source, 'Opening', 'success')
+     end
+
+     Backpack.data[metadata.id] = {
+          source = source,
+          item_name = item_name,
      }
 
-     if not backpack_metadata.locked then
-          TriggerClientEvent('keep-backpack:client:open', backpack_metadata.source, safe_data)
+     if backpack_conf.locked and not metadata.password then
+          Harmony.Event.emitNet('client:set_password', source, metadata.id)
           return
      end
 
-     if (backpack.item.info.password == backpack_metadata.password) or lockpick then
-          TriggerClientEvent('keep-backpack:client:open', backpack_metadata.source, safe_data)
+     if hasTooManyBackpacks(Player, item_ref) then
+          Harmony.Player.Notify(source, Locale.get('errors.multiple_backpacks'), 'error')
           return
+     end
+
+     if backpack_conf.locked then
+          Harmony.Event.emitNet('client:enter_password', source, metadata.id)
      else
-          TriggerClientEvent('QBCore:Notify', backpack_metadata.source, 'Wrong password', "error")
+          open_backpack(source, metadata.id, item_name)
+     end
+end
+
+-- events
+
+Harmony.Event.onNet('server:open_with_password', function(source, id, password)
+     if not password or password == '' or type(password) ~= 'string' then
+          Harmony.Player.Notify(source, Locale.get('errors.try_better_password'), 'error')
           return
+     end
+     local Player = Harmony.Player.Object(source)
+     local backpack = Backpack.data[id]
+     if backpack and source == backpack['source'] then
+          local backpack_item = Harmony.Item.Search_by.Id(Player, backpack['item_name'], id)
+          local metadata = Harmony.Item.Metadata.Get(backpack_item)
+
+          if metadata.password == password then
+               open_backpack(source, id, backpack['item_name'])
+          else
+               Harmony.Player.Notify(source, Locale.get('errors.wrong_password'), 'error')
+          end
+     end
+end)
+
+Harmony.Event.onNet('server:set_password', function(source, id, password)
+     if not password or password == '' or type(password) ~= 'string' then
+          Harmony.Player.Notify(source, Locale.get('errors.try_better_password'), 'error')
+          return
+     end
+     local Player = Harmony.Player.Object(source)
+     local backpack = Backpack.data[id]
+     if backpack and source == backpack['source'] then
+          local backpack_item = Harmony.Item.Search_by.Id(Player, backpack['item_name'], id)
+          local metadata = Harmony.Item.Metadata.Get(backpack_item)
+
+          metadata.password = password -- who needs encryption am I right?!
+          backpack_item = Harmony.Item.Metadata.Prepare(backpack_item, metadata)
+          Harmony.Item.Metadata.Save(Player, backpack_item)
+
+          Harmony.Player.Notify(source, Locale.get('success.password_set'), 'success')
+     end
+end)
+
+Harmony.Event.onNet('server:stash:closed', function(source, id)
+     local Player = Harmony.Player.Object(source)
+     local backpack = Backpack.data[id]
+     if not backpack then return end
+
+     local backpack_conf = GetBackpackConfig(backpack['item_name'])
+     local stash_items = Harmony.Stash('Backpack_', id).Items()
+
+     local has_nested_backpacks = checkForNestedBackpacks(stash_items, id, source, Player)
+
+     if not has_nested_backpacks then
+          local has_other_backpacks = checkForOtherBackpacks(stash_items, source, Player)
+
+          if not has_other_backpacks then
+               local valid_items = filterValidItems(stash_items, backpack_conf)
+               notifyAndReturnInvalidItems(stash_items, valid_items, Player, source)
+          end
+     end
+
+     Harmony.Stash('Backpack_', id).Save(stash_items)
+end)
+
+RegisterNetEvent('keep-backpack:server:saveBackpack', function(source, stashId, items)
+     local stashIdData = str_split(stashId, "_")
+     local backpackId = stashIdData[2]
+
+     SaveStashItems(stashId, items)
+end)
+
+AddEventHandler('onResourceStart', function(resource)
+     if resource ~= resource_name then return end
+     Wait(500)
+
+     exports['keep-harmony']:ShowInformation()
+     exports['keep-harmony']:UpdateChecker()
+end)
+
+-- items
+
+CreateThread(function()
+     for item_name, backpack_conf in pairs(Config.Backpacks) do
+          CreateUseableItem(item_name, function(source, item_ref)
+               backpack_use(source, item_name, backpack_conf, item_ref)
+          end)
      end
 end)

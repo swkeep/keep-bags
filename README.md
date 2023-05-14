@@ -1,64 +1,163 @@
 # keep-backpack
 
-![Keep-backpack](https://raw.githubusercontent.com/swkeep/keep-backpack/main/.github/images/backpack.png)
+![Keep-backpack](.github/images/keep-backpack.jpg)
 
-- A backpacks script that allows players to carry more items within their inventory.
+keep-backpack is a backpack script designed to enhance the inventory management experience for players. With a range of key features.
 
-# Key Features
+## Key Features
 
-- players can carry more materials in their inventory
-- backpack props on the player's back or hands
-- blacklisted items
-- opening/closing animation
-- locking system for backpacks
-- players can not use backpacks if they are not on their Hotbar
-- no backpack in backpack exploit
-- (removed) weight and slower movement speed
+- **Expanded Inventory Capacity**: Players can carry more materials and items within their inventory, allowing for greater flexibility and resource management.
+
+- **Backpack Props**: The script provides realistic visuals by displaying backpack props on the player's back or hands, indicating that they are equipped with a backpack.
+
+- **Blacklisted Items**: A flexible option allows you to specify blacklisted items, ensuring that certain items cannot be stored in the backpack. This feature helps maintain balance and prevents abuse.
+
+- **Smooth Animation**: Opening and closing animations provide an immersive and visually appealing experience when accessing the backpack. These animations enhance realism and immersion within the game.
+
+- **Locking System**: Backpacks can be equipped with a locking system, offering an additional layer of security for valuable or sensitive items.
+
+- **Prevents Exploits**: The script actively prevents the "backpack in backpack" exploit, ensuring fair gameplay and maintaining the integrity of the inventory system.
+
+## ❤️ Support Development
+
+If you enjoy my work and would like to show your appreciation, please consider making a donation to support the ongoing development of the script. Your contribution goes a long way in helping me add more exciting features and improvements. 🚀
+
+- Click Here -> [ko-fi](https://ko-fi.com/swkeep)
+
+Thank you for your generosity and support! 🙏
 
 # Preview
 
-[Keep-backpack](https://youtu.be/7r6rUoMfvV4)
+Check out Keep-Backpack preview for a better understanding of the mod's functionality.
+[Preview Youtube](https://youtu.be/7r6rUoMfvV4)
 
 # Dependencies
 
 - qb-core
 - qb-inventory
 - progressbar
+- **[keep-harmony](https://swkeep.tebex.io/package/5592482)**
 
 # How to Install
 
-# step0:
+Follow the steps mentioned below to install keep-backpack:
+
+# step 0:
 
 - Add images inside `inventoryimages` to `qb-inventory/html/images`
 
-# step1:
+# step 1:
 
 - Add Below code to `qb-core/shared/items.lua`
 
 ```lua
 ["backpack1"] = {
      ["name"] = "backpack1",
-     ["label"] = "Backpack 1",
+     ["label"] = "Backpack",
      ["weight"] = 7500,
      ["type"] = "item",
-     ["image"] = "backpack_girl.png",
+     ["image"] = "backpack1.png",
      ["unique"] = true,
      ["useable"] = true,
      ["shouldClose"] = true,
      ["combinable"] = nil,
-     ["description"] = "Backpack"
+     ["description"] = "A stylish backpack"
 },
 ["backpack2"] = {
      ["name"] = "backpack2",
-     ["label"] = "Backpack 2",
+     ["label"] = "Backpack",
      ["weight"] = 15000,
      ["type"] = "item",
-     ["image"] = "backpack_boy.png",
+     ["image"] = "backpack2.png",
      ["unique"] = true,
      ["useable"] = true,
      ["shouldClose"] = true,
      ["combinable"] = nil,
-     ["description"] = "Backpack"
+     ["description"] = "A stylish backpack"
+},
+["backpack3"] = {
+     ["name"] = "backpack3",
+     ["label"] = "Backpack",
+     ["weight"] = 15000,
+     ["type"] = "item",
+     ["image"] = "backpack3.png",
+     ["unique"] = true,
+     ["useable"] = true,
+     ["shouldClose"] = true,
+     ["combinable"] = nil,
+     ["description"] = "A stylish backpack"
+},
+["backpack4"] = {
+     ["name"] = "backpack4",
+     ["label"] = "Backpack",
+     ["weight"] = 15000,
+     ["type"] = "item",
+     ["image"] = "backpack4.png",
+     ["unique"] = true,
+     ["useable"] = true,
+     ["shouldClose"] = true,
+     ["combinable"] = nil,
+     ["description"] = "A stylish backpack"
+},
+["backpack5"] = {
+     ["name"] = "backpack5",
+     ["label"] = "Backpack",
+     ["weight"] = 15000,
+     ["type"] = "item",
+     ["image"] = "backpack5.png",
+     ["unique"] = true,
+     ["useable"] = true,
+     ["shouldClose"] = true,
+     ["combinable"] = nil,
+     ["description"] = "A stylish backpack"
+},
+["backpack6"] = {
+     ["name"] = "backpack6",
+     ["label"] = "Backpack",
+     ["weight"] = 15000,
+     ["type"] = "item",
+     ["image"] = "backpack6.png",
+     ["unique"] = true,
+     ["useable"] = true,
+     ["shouldClose"] = true,
+     ["combinable"] = nil,
+     ["description"] = "A stylish backpack"
+},
+["backpack7"] = {
+     ["name"] = "backpack7",
+     ["label"] = "Backpack",
+     ["weight"] = 15000,
+     ["type"] = "item",
+     ["image"] = "backpack7.png",
+     ["unique"] = true,
+     ["useable"] = true,
+     ["shouldClose"] = true,
+     ["combinable"] = nil,
+     ["description"] = "A stylish backpack"
+},
+["duffle1"] = {
+     ["name"] = "duffle1",
+     ["label"] = "Duffle bag",
+     ["weight"] = 15000,
+     ["type"] = "item",
+     ["image"] = "duffle1.png",
+     ["unique"] = true,
+     ["useable"] = true,
+     ["shouldClose"] = true,
+     ["combinable"] = nil,
+     ["description"] = "A stylish duffle bag"
+},
+["duffle2"] = {
+     ["name"] = "duffle2",
+     ["label"] = "Duffle bag",
+     ["weight"] = 15000,
+     ["type"] = "item",
+     ["image"] = "duffle2.png",
+     ["unique"] = true,
+     ["useable"] = true,
+     ["shouldClose"] = true,
+     ["combinable"] = nil,
+     ["description"] = "A stylish duffle bag"
 },
 ["briefcase"] = {
      ["name"] = "briefcase",
@@ -70,19 +169,19 @@
      ["useable"] = true,
      ["shouldClose"] = true,
      ["combinable"] = nil,
-     ["description"] = "Briefcase"
+     ["description"] = "A portable rectangular case used for carrying important documents, files, or other personal belongings."
 },
 ["paramedicbag"] = {
      ["name"] = "paramedicbag",
      ["label"] = "Paramedic bag",
      ["weight"] = 5000,
      ["type"] = "item",
-     ["image"] = "paramedic_bag.png",
+     ["image"] = "paramedicbag.png",
      ["unique"] = true,
      ["useable"] = true,
      ["shouldClose"] = true,
      ["combinable"] = nil,
-     ["description"] = "Paramedic bag"
+     ["description"] = "A medical bag used by paramedics, containing essential supplies for emergency care."
 },
 
 -- new item
@@ -100,100 +199,46 @@
 },
 ```
 
-# step2 (important): fix for exploits
+# Step 2: Fix for Exploits
 
-- 1: backpack in backpack
-- open qb-inventory/server/main.lua
-- find this event 'inventory:server:SaveInventory'
-- add `local src = source` at top of this event 
-- find 'elseif type == "stash" then' it should look like this:
+The following steps will guide you on how to fix a specific exploit related to backpacks within backpacks.
+
+1. Open `qb-inventory/server/main.lua` file.
+2. Scroll down and locate the event `inventory:server:SaveInventory`.
+3. Add the following line of code at the top of this event:
+
+```lua
+local src = source
+```
+
+This will define a local variable `src` and set its value to the `source` argument passed into the event.
+
+4. Find the `elseif type == "stash" then` statement - it should look like this:
 
 ```lua
 elseif type == "stash" then
-     SaveStashItems(id, Stashes[id].items)
+    SaveStashItems(id, Stashes[id].items)
 elseif type == "drop" then
 ```
 
-- change code inside it to look like this
+5. Replace this code block with the following updated version:
 
 ```lua
 elseif type == "stash" then
-     local indexstart, indexend = string.find(id, 'Backpack_')
-     if indexstart and indexend then
-          TriggerEvent('keep-backpack:server:saveBackpack', source, id, Stashes[id].items)
-          Stashes[id].isOpen = true
-          return
-     end
-     SaveStashItems(id, Stashes[id].items)
+    local indexstart, indexend = string.find(id, 'Backpack_')
+    if indexstart and indexend then
+        TriggerEvent('keep-backpack:server:saveBackpack', source, id, Stashes[id].items)
+        Stashes[id].isOpen = true
+        return
+    end
+    SaveStashItems(id, Stashes[id].items)
 elseif type == "drop" then
 ```
 
-# step3 (optional): add backpackshop
-
-- open 'qb-shops/config.lua'
-- add new 'products' to 'Config.Products'
-
-```lua
-["backpackshop"] = {
-     [1] = {
-          name = "backpack1",
-          price = 5,
-          amount = 750,
-          info = {},
-          type = "item",
-          slot = 1,
-     },
-     [2] = {
-          name = "backpack2",
-          price = 2500,
-          amount = 5,
-          info = {},
-          type = "item",
-          slot = 2,
-     },
-     [3] = {
-          name = "briefcase",
-          price = 2500,
-          amount = 5,
-          info = {},
-          type = "item",
-          slot = 3,
-     },
-     [4] = {
-          name = "paramedicbag",
-          price = 5000,
-          amount = 5,
-          info = {},
-          type = "item",
-          slot = 4,
-     },
-},
-```
-
-- now add new shop to 'Config.Locations'
-
-```lua
-["backpackshop"] = {
-     ["label"] = "24/7 Backpackshop",
-     ["coords"] = vector4(-135.68, 6199.79, 32.38, 64.55),
-     ["ped"] = 'mp_m_waremech_01',
-     ["scenario"] = "WORLD_HUMAN_CLIPBOARD",
-     ["radius"] = 1.5,
-     ["targetIcon"] = "fas fa-shopping-basket",
-     ["targetLabel"] = "Open Shop",
-     ["products"] = Config.Products["backpackshop"],
-     ["showblip"] = true,
-     ["blipsprite"] = 440,
-     ["blipcolor"] = 0
-},
-```
+This new code block checks to see if the `id` variable contains "Backpack\_" within it. If it does, it triggers the `keep-backpack:server:saveBackpack` event which is responsible for saving backpacks within backpacks. Otherwise, it saves the stash items as usual.
 
 - done
 
 # Support
 
 - [Discord](https://discord.gg/ccMArCwrPV)
-
-# Donation
-
--
