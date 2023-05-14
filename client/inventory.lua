@@ -1,10 +1,11 @@
 local Harmony = exports['keep-harmony']:GetCoreObject()
-local QBCore = exports['qb-core']:GetCoreObject()
 local resource_name = GetCurrentResourceName()
 -----
 local loggedOut = false
 local oldPed = 0
 -----
+local PlayerPedId = PlayerPedId
+--
 
 local function check(updated_inventory_data)
     PlayerPed = PlayerPedId()
@@ -22,8 +23,10 @@ end
 
 function Load()
     BodyAttachment:clearAll()
-    local items = QBCore.Functions.GetPlayerData().items
-    check(items)
+    local PlayerData = Harmony.Player.PlayerData()
+    if PlayerData then
+        check(PlayerData.items)
+    end
 end
 
 Harmony.onUpdate.items(check)
@@ -66,13 +69,13 @@ AddEventHandler('onResourceStop', function(resource)
     UnfreezePlayer()
 end)
 
-AddEventHandler('illenium-appearance:client:loadJobOutfit',function ()
+AddEventHandler('illenium-appearance:client:loadJobOutfit', function()
     Wait(500)
 
     Load()
 end)
 
-RegisterNetEvent('illenium-appearance:client:reloadSkin',function ()
+RegisterNetEvent('illenium-appearance:client:reloadSkin', function()
     Wait(500)
 
     Load()
