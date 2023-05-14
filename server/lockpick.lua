@@ -46,7 +46,7 @@ Harmony.Event.onNet('server:lockpick:open', function(source, item_name, id)
     if not IsBackpack(backpack_item) or not hasItemLockpick then return end
 
     if Harmony.Player.RemoveItem(source, Player, 'briefcaselockpicker') then
-        open_backpack(source, id, item_name)
+        Open_backpack(source, id, item_name)
     end
 end)
 

@@ -12,6 +12,7 @@ local Harmony = exports["keep-harmony"]:GetCoreObject()
 local Shared = exports["keep-harmony"]:Shared()
 local CreateUseableItem = Harmony.Item.CreateUseableItem
 local RandomId = Shared.RandomId
+local MySQL = MySQL
 
 local Backpack = {
      data = {}
@@ -153,7 +154,7 @@ local function notifyAndReturnInvalidItems(stash_items, valid_items, Player, sou
      end
 end
 
-function open_backpack(source, id, item_name)
+function Open_backpack(source, id, item_name)
      local backpack_conf = GetBackpackConfig(item_name)
 
      Harmony.Stash('Backpack_', id).Open(source, {
@@ -209,7 +210,7 @@ local function backpack_use(source, item_name, backpack_conf, item_ref)
      if backpack_conf.locked then
           Harmony.Event.emitNet('client:enter_password', source, metadata.id)
      else
-          open_backpack(source, metadata.id, item_name)
+          Open_backpack(source, metadata.id, item_name)
      end
 end
 
@@ -227,7 +228,7 @@ Harmony.Event.onNet('server:open_with_password', function(source, id, password)
           local metadata = Harmony.Item.Metadata.Get(backpack_item)
 
           if metadata.password == password then
-               open_backpack(source, id, backpack['item_name'])
+               Open_backpack(source, id, backpack['item_name'])
           else
                Harmony.Player.Notify(source, Locale.get('errors.wrong_password'), 'error')
           end
