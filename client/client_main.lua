@@ -67,7 +67,7 @@ Harmony.Event.onNet('client:lockpick:menu', function(items)
           }
      end
 
-     Harmony.Menu.Translator(menu)
+     Harmony.Menu.Translator(menu, Locale.is_rtl())
 end)
 
 AddEventHandler('harmony:client:stash:closed', function(prefix, id)

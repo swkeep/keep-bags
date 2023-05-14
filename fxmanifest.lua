@@ -9,6 +9,8 @@ repository 'https://github.com/swkeep/keep-backpack'
 
 shared_scripts {
      'locale/en.lua',
+     'locale/de.lua',
+     'locale/ar.lua',
      'shared/props.lua',
      'config.lua',
      'shared/shared.lua',

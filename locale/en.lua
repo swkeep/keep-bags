@@ -35,6 +35,5 @@ Locale = Shared.Locale.new {
         backpack_self_insertion = 'Oh, honey! Looks like someone thought they could shove their backpack inside itself.',
         backpack_rule_breaker = "Oh snap! Looks like we have a backpack rule-breaker in the house. Newsflash, you can't just stash one backpack inside another.",
         backpack_crammed = "Listen up, buddy! I know you're excited about your fancy backpack, but let's get real. You really think it's a good idea to cram %s inside?"
-
     },
 }
