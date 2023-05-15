@@ -42,11 +42,11 @@ Check out Keep-Backpack preview for a better understanding of the mod's function
 
 Follow the steps mentioned below to install keep-backpack:
 
-# step 0:
+# step 1:
 
 - Add images inside `inventoryimages` to `qb-inventory/html/images`
 
-# step 1:
+# step 2:
 
 - Add Below code to `qb-core/shared/items.lua`
 
@@ -183,8 +183,30 @@ Follow the steps mentioned below to install keep-backpack:
      ["combinable"] = nil,
      ["description"] = "A medical bag used by paramedics, containing essential supplies for emergency care."
 },
-
--- new item
+["policepouches"] = {
+    ["name"] = "policepouches",
+    ["label"] = "Police Pouch",
+    ["weight"] = 5000,
+    ["type"] = "item",
+    ["image"] = "policepouches.png",
+    ["unique"] = true,
+    ["useable"] = true,
+    ["shouldClose"] = true,
+    ["combinable"] = nil,
+    ["description"] = "A pouch used by police officers to store and carry essential supplies such as handcuffs, pepper spray, and other tactical equipment."
+},
+["policepouches1"] = {
+    ["name"] = "policepouches1",
+    ["label"] = "Police Pouch",
+    ["weight"] = 5000,
+    ["type"] = "item",
+    ["image"] = "policepouches1.png",
+    ["unique"] = true,
+    ["useable"] = true,
+    ["shouldClose"] = true,
+    ["combinable"] = nil,
+    ["description"] = "A larger version of the police pouch used to store additional tactical gear and equipment."
+},
 ["briefcaselockpicker"] = {
      ["name"] = "briefcaselockpicker",
      ["label"] = "Briefcase Lockpicker",
@@ -279,6 +301,20 @@ Follow the steps mentioned below to install keep-backpack:
      close = true,
      description = "A medical bag used by paramedics, containing essential supplies for emergency care."
 },
+["policepouches"] = {
+     label = "Police Pouch",
+     weight = 5,
+     stack = false,
+     close = true,
+     description = "A pouch used by police officers to store and carry essential supplies such as handcuffs, pepper spray, and other tactical equipment."
+},
+["policepouches1"] = {
+     label = "Police Pouch",
+     weight = 5,
+     stack = false,
+     close = true,
+     description = "A larger version of the police pouch used to store additional tactical gear and equipment."
+},
 
 ["briefcaselockpicker"] = {
      label = "Briefcase Lockpicker",
@@ -288,44 +324,6 @@ Follow the steps mentioned below to install keep-backpack:
      description = "Briefcase Lockpicker"
 }
 ```
-
-# Step 2: Fix for Exploits
-
-The following steps will guide you on how to fix a specific exploit related to backpacks within backpacks.
-
-1. Open `qb-inventory/server/main.lua` file.
-2. Scroll down and locate the event `inventory:server:SaveInventory`.
-3. Add the following line of code at the top of this event:
-
-```lua
-local src = source
-```
-
-This will define a local variable `src` and set its value to the `source` argument passed into the event.
-
-4. Find the `elseif type == "stash" then` statement - it should look like this:
-
-```lua
-elseif type == "stash" then
-    SaveStashItems(id, Stashes[id].items)
-elseif type == "drop" then
-```
-
-5. Replace this code block with the following updated version:
-
-```lua
-elseif type == "stash" then
-    local indexstart, indexend = string.find(id, 'Backpack_')
-    if indexstart and indexend then
-        TriggerEvent('keep-backpack:server:saveBackpack', source, id, Stashes[id].items)
-        Stashes[id].isOpen = true
-        return
-    end
-    SaveStashItems(id, Stashes[id].items)
-elseif type == "drop" then
-```
-
-This new code block checks to see if the `id` variable contains "Backpack\_" within it. If it does, it triggers the `keep-backpack:server:saveBackpack` event which is responsible for saving backpacks within backpacks. Otherwise, it saves the stash items as usual.
 
 - done
 
