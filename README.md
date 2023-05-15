@@ -36,6 +36,12 @@ Check out Keep-bags preview for a better understanding of the mod's functionalit
 
 ## [Click HERE (Youtube)](https://youtu.be/4FCx1_pOTpE)
 
+# Resource Usage
+
+![Keep-bags](.github/images/test.png)
+
+- i renamed the script from keep-backpack to keep-bags ;)
+
 # Dependencies
 
 - qb-core/esx
@@ -48,6 +54,9 @@ Check out Keep-bags preview for a better understanding of the mod's functionalit
 # How to Install
 
 Follow the steps mentioned below to install keep-bags:
+
+- Before installing, if you're updating from an old version (keep Backpack).
+- Make sure you revert the changes on QB inventory so that Bags are saved to the database.
 
 ## step 1:
 
