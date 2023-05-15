@@ -132,9 +132,9 @@ end
 local function filterValidItems(stash_items, backpack_conf)
      local valid_items
      if backpack_conf.whitelist then
-          valid_items = filter(stash_items, function(item) return backpack_conf.whitelist[item.name] end)
+          valid_items = filter(stash_items, function(item) return backpack_conf.whitelist[string.lower(item.name)] end)
      elseif backpack_conf.blacklist then
-          valid_items = filter(stash_items, function(item) return not backpack_conf.blacklist[item.name] end)
+          valid_items = filter(stash_items, function(item) return not backpack_conf.blacklist[string.lower(item.name)] end)
      else
           valid_items = stash_items
      end
