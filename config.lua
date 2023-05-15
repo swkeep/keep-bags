@@ -24,7 +24,7 @@ Config.Backpacks                          = {
           size = 100000,
           cloth = {
                male = {
-                    ["accessory"] = { item = 148, texture = 0 }
+                    ["bag"] = { item = 36, texture = 0 }
                },
                female = {
                     ["bag"] = { item = 85, texture = 13 }
@@ -39,7 +39,7 @@ Config.Backpacks                          = {
           size = 200000,
           cloth = {
                male = {
-                    ["vest"] = { item = 32, texture = 0 }
+                    ["bag"] = { item = 36, texture = 1 }
                },
                female = {
                     ["bag"] = { item = 85, texture = 13 }
@@ -50,6 +50,54 @@ Config.Backpacks                          = {
           },
      },
      ['backpack3'] = {
+          slots = 30,
+          size = 300000,
+          cloth = {
+               male = {
+                    ["bag"] = { item = 36, texture = 3 }
+               },
+               female = {
+                    ["bag"] = { item = 85, texture = 13 }
+               }
+          },
+     },
+     ['backpack4'] = {
+          slots = 20,
+          size = 200000,
+          cloth = {
+               male = {
+                    ["bag"] = { item = 36, texture = 3 }
+               },
+               female = {
+                    ["bag"] = { item = 85, texture = 13 }
+               }
+          },
+     },
+     ['backpack5'] = {
+          slots = 20,
+          size = 200000,
+          cloth = {
+               male = {
+                    ["bag"] = { item = 69, texture = 0 }
+               },
+               female = {
+                    ["bag"] = { item = 85, texture = 13 }
+               }
+          },
+     },
+     ['backpack6'] = {
+          slots = 20,
+          size = 200000,
+          cloth = {
+               male = {
+                    ["bag"] = { item = 69, texture = 0 }
+               },
+               female = {
+                    ["bag"] = { item = 85, texture = 13 }
+               }
+          },
+     },
+     ['backpack7'] = {
           slots = 20,
           size = 200000,
           cloth = {
@@ -66,7 +114,7 @@ Config.Backpacks                          = {
           size = 200000,
           cloth = {
                male = {
-                    ["bag"] = { item = 82, texture = 0 }
+                    ["bag"] = { item = 82, texture = 4 }
                },
                female = {
                     ["accessory"] = { item = 123, texture = 0 }
@@ -74,11 +122,11 @@ Config.Backpacks                          = {
           },
      },
      ['duffle2'] = {
-          slots = 20,
-          size = 200000,
+          slots = 40,
+          size = 400000,
           cloth = {
                male = {
-                    ["bag"] = { item = 41, texture = 0 }
+                    ["bag"] = { item = 82, texture = 0 }
                },
                female = {
                     ["bag"] = { item = 85, texture = 13 }
@@ -95,5 +143,38 @@ Config.Backpacks                          = {
           slots = 10,
           size = 50000,
           prop = GetProp('paramedicbag'),
+     },
+
+     -- police
+
+     ['policepouches'] = {
+          slots = 6,
+          size = 200000,
+          cloth = {
+               male = {
+                    ["accessory"] = { item = 146, texture = 0 }
+               },
+               female = {
+                    ["accessory"] = { item = 123, texture = 0 }
+               },
+          },
+          whitelist = {
+               ['weapon_pistol'] = true
+          },
+     },
+     ['policepouches1'] = {
+          slots = 12,
+          size = 400000,
+          cloth = {
+               male = {
+                    ["accessory"] = { item = 147, texture = 0 }
+               },
+               female = {
+                    ["accessory"] = { item = 123, texture = 0 }
+               },
+          },
+          whitelist = {
+               ['weapon_pistol'] = true
+          },
      },
 }
