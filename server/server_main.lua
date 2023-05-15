@@ -262,16 +262,10 @@ Harmony.Event.onNet('server:stash:closed', function(source, id)
      local backpack_conf = GetBackpackConfig(backpack['item_name'])
      local stash_items = Harmony.Stash('Backpack_', id).Items()
 
-     local has_nested_backpacks = checkForNestedBackpacks(stash_items, id, source, Player)
-
-     if not has_nested_backpacks then
-          local has_other_backpacks = checkForOtherBackpacks(stash_items, source, Player)
-
-          if not has_other_backpacks then
-               local valid_items = filterValidItems(stash_items, backpack_conf)
-               notifyAndReturnInvalidItems(stash_items, valid_items, Player, source)
-          end
-     end
+     checkForNestedBackpacks(stash_items, id, source, Player)
+     checkForOtherBackpacks(stash_items, source, Player)
+     local valid_items = filterValidItems(stash_items, backpack_conf)
+     notifyAndReturnInvalidItems(stash_items, valid_items, Player, source)
 
      Harmony.Stash('Backpack_', id).Save(stash_items)
 end)
