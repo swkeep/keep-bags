@@ -1,28 +1,33 @@
 fx_version 'cerulean'
 games { 'gta5' }
 
+name 'keep-bags'
+description 'a bag script that allows players to carry more items within their inventory'
+version '2.0.0'
 author "Swkeep#7049"
+repository 'https://github.com/swkeep/keep-bags'
 
 shared_scripts {
-     '@qb-core/shared/locale.lua',
      'locale/en.lua',
+     'locale/de.lua',
+     'locale/ar.lua',
+     'shared/props.lua',
      'config.lua',
-     'shared/shared.lua'
+     'shared/shared.lua',
 }
 
 client_scripts {
-     -- '@PolyZone/client.lua',
-     -- '@PolyZone/BoxZone.lua',
      'client/client_main.lua',
-     'client/lib/c_lib.lua',
-     'client/menu/menu.lua',
-     'client/target/target.lua',
+     'client/functions.lua',
+     'client/clothing.lua',
+     'client/backpacks.lua',
+     'client/inventory.lua',
 }
 
 server_script {
      '@oxmysql/lib/MySQL.lua',
      'server/server_main.lua',
-     'server/lib/s_lib.lua'
+     'server/lockpick.lua',
 }
 
 dependency 'oxmysql'
