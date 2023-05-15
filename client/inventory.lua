@@ -69,11 +69,11 @@ AddEventHandler('onResourceStop', function(resource)
     UnfreezePlayer()
 end)
 
-AddEventHandler('illenium-appearance:client:loadJobOutfit', function()
-    Wait(500)
+-- AddEventHandler('illenium-appearance:client:loadJobOutfit', function()
+--     Wait(500)
 
-    Load()
-end)
+--     Load()
+-- end)
 
 RegisterNetEvent('illenium-appearance:client:reloadSkin', function()
     Wait(500)
