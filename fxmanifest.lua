@@ -1,11 +1,11 @@
 fx_version 'cerulean'
 games { 'gta5' }
 
-name 'keep-backpack'
-description 'a backpack script that allows players to carry more items within their inventory'
+name 'keep-bags'
+description 'a bag script that allows players to carry more items within their inventory'
 version '2.0.0'
 author "Swkeep#7049"
-repository 'https://github.com/swkeep/keep-backpack'
+repository 'https://github.com/swkeep/keep-bags'
 
 shared_scripts {
      'locale/en.lua',

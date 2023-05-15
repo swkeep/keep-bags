@@ -73,17 +73,17 @@ Harmony.Event.onNet('client:lockpick:menu', function(items)
 end)
 
 AddEventHandler('harmony:client:stash:closed', function(prefix, id)
-     if prefix ~= 'Backpack_' then return end
+     if prefix ~= 'Bag_' then return end
      Harmony.Event.emitNet('server:stash:closed', id)
      Harmony.Emote.Stop()
 end)
 
 AddEventHandler('harmony:client:stash:opening', function(prefix, id)
-     if prefix ~= 'Backpack_' then return end
+     if prefix ~= 'Bag_' then return end
      Harmony.Emote.Play('kneel3')
 end)
 
 AddEventHandler('harmony:client:stash:cancelled', function(prefix, id)
-     if prefix ~= 'Backpack_' then return end
+     if prefix ~= 'Bag_' then return end
      Harmony.Emote.Stop()
 end)

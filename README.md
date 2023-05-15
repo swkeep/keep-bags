@@ -1,22 +1,22 @@
-# keep-backpack
+# keep-bags
 
-![Keep-backpack](.github/images/keep-backpack.jpg)
+![Keep-bags](.github/images/keep-bags.jpg)
 
-keep-backpack is a backpack script designed to enhance the inventory management experience for players. With a range of key features.
+keep-bags is a script designed to enhance the inventory management experience for players. With a range of key features.
 
 ## Key Features
 
 - **Expanded Inventory Capacity**: Players can carry more materials and items within their inventory, allowing for greater flexibility and resource management.
 
-- **Backpack Props**: The script provides realistic visuals by displaying backpack props on the player's back or hands, indicating that they are equipped with a backpack.
+- **Props**: The script provides realistic visuals by displaying bag props on the player's back or hands, indicating that they are equipped with a bag.
 
-- **Blacklisted Items**: A flexible option allows you to specify blacklisted items, ensuring that certain items cannot be stored in the backpack. This feature helps maintain balance and prevents abuse.
+- **Blacklisted Items**: A flexible option allows you to specify blacklisted items, ensuring that certain items cannot be stored in the bag. This feature helps maintain balance and prevents abuse.
 
 - **Smooth Animation**: Opening and closing animations provide an immersive and visually appealing experience when accessing the backpack. These animations enhance realism and immersion within the game.
 
-- **Locking System**: Backpacks can be equipped with a locking system, offering an additional layer of security for valuable or sensitive items.
+- **Locking System**: Bags can be equipped with a locking system, offering an additional layer of security for valuable items.
 
-- **Prevents Exploits**: The script actively prevents the "backpack in backpack" exploit, ensuring fair gameplay and maintaining the integrity of the inventory system.
+- **Prevents Exploits**: The script actively prevents the "bag in bag" exploit, ensuring fair gameplay and maintaining the integrity of the inventory system.
 
 ## ❤️ Support Development
 
@@ -26,27 +26,33 @@ If you enjoy my work and would like to show your appreciation, please consider m
 
 Thank you for your generosity and support! 🙏
 
+### Support
+
+- [Discord](https://discord.gg/ccMArCwrPV)
+
 # Preview
 
-Check out Keep-Backpack preview for a better understanding of the mod's functionality.
+Check out Keep-bags preview for a better understanding of the mod's functionality.
 [Preview Youtube](https://youtu.be/7r6rUoMfvV4)
 
 # Dependencies
 
-- qb-core
-- qb-inventory
-- progressbar
+- qb-core/esx
+- qb-inventory/ox_inventory
+- ox_lib (required on esx/optional for qbcore)
+- [illenium-appearance](https://github.com/iLLeniumStudios/illenium-appearance)
+- rpemotes/dpemotes/scully_emotemenu
 - **[keep-harmony](https://swkeep.tebex.io/package/5592482)**
 
 # How to Install
 
-Follow the steps mentioned below to install keep-backpack:
+Follow the steps mentioned below to install keep-bags:
 
-# step 1:
+## step 1:
 
 - Add images inside `inventoryimages` to `qb-inventory/html/images`
 
-# step 2:
+## step 2:
 
 - Add Below code to `qb-core/shared/items.lua`
 
@@ -326,7 +332,3 @@ Follow the steps mentioned below to install keep-backpack:
 ```
 
 - done
-
-# Support
-
-- [Discord](https://discord.gg/ccMArCwrPV)

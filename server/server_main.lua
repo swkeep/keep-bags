@@ -157,7 +157,7 @@ end
 function Open_backpack(source, id, item_name)
      local backpack_conf = GetBackpackConfig(item_name)
 
-     Harmony.Stash('Backpack_', id).Open(source, {
+     Harmony.Stash('Bag_', id).Open(source, {
           metadata = {
                size = backpack_conf.size or 10000,
                slots = backpack_conf.slots or 6,
@@ -260,14 +260,14 @@ Harmony.Event.onNet('server:stash:closed', function(source, id)
      if not backpack then return end
 
      local backpack_conf = GetBackpackConfig(backpack['item_name'])
-     local stash_items = Harmony.Stash('Backpack_', id).Items()
+     local stash_items = Harmony.Stash('Bag_', id).Items()
 
      checkForNestedBackpacks(stash_items, id, source, Player)
      checkForOtherBackpacks(stash_items, source, Player)
      local valid_items = filterValidItems(stash_items, backpack_conf)
      notifyAndReturnInvalidItems(stash_items, valid_items, Player, source)
 
-     Harmony.Stash('Backpack_', id).Save(stash_items)
+     Harmony.Stash('Bag_', id).Save(stash_items)
 end)
 
 RegisterNetEvent('keep-backpack:server:saveBackpack', function(source, stashId, items)
