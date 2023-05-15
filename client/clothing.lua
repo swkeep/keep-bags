@@ -85,8 +85,9 @@ local function setCloth(cloth_type, cloth)
     local outfit = {
         outfitData = { [cloth_type] = { item = cloth.item or -1, texture = cloth.texture or 0 } }
     }
-    TriggerEvent('qb-clothing:client:loadOutfit', outfit)
-    return true
+
+    -- TriggerEvent('qb-clothing:client:loadOutfit', outfit)
+    TriggerEvent('illenium-appearance:client:loadJobOutfit', outfit)
 end
 
 -- Attaches a prop/cloth to the specified bone in the body
