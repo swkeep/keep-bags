@@ -170,7 +170,7 @@ local function backpack_use(source, item_name, backpack_conf, item_ref)
      local Player = Harmony.Player.Object(source)
      if not Player then return end
      local Identifier = Harmony.Player.Identifier(Player)
-     local Hash = joaat(Identifier)
+     local Hash = Shared.CustomDJB2(Identifier)
      local metadata = Harmony.Item.Metadata.Get(item_ref)
 
      if type(metadata) == 'table' and metadata.ID then
@@ -279,7 +279,7 @@ end)
 
 AddEventHandler('onResourceStart', function(resource)
      if resource ~= resource_name then return end
-     Wait(500)
+     Wait(1000)
 
      exports['keep-harmony']:ShowInformation()
      exports['keep-harmony']:UpdateChecker()
