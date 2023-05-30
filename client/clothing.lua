@@ -65,6 +65,7 @@ local function AttachPropToBone(modelName, bone, position)
     LoadPropModel(modelName)
 
     activeProp = CreateObject(modelHash, xPos, yPos, zPos + 0.2, true, true, true)
+    SetEntityCollision(activeProp, false, false)
     AttachEntityToEntity(activeProp, playerPed, boneIndex, position.x, position.y, position.z, position.xRotation, position.yRotation, position.zRotation, true, true, false, true, 1, true)
     SetModelAsNoLongerNeeded(modelHash)
 
@@ -100,6 +101,12 @@ function BodyAttachment:attachToBone(bone, backpack_conf, slot)
         self.apparence[bone] = CurrentAppearance()[bone]
     end
     if backpack_conf.texture or backpack_conf.item then
+        if self.boneInfo[bone] and self.boneInfo[bone].activeProp then
+            self:removeFromBone(bone)
+            self.boneInfo[bone].activeProp = nil
+            self.boneInfo[bone].model = nil
+            self.boneInfo[bone].slotIndex = 0
+        end
         local cloth = backpack_conf
         -- then it means this is a cloth type
         local boneIndex = self.boneInfo[bone]
