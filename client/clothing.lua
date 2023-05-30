@@ -122,11 +122,13 @@ function BodyAttachment:attachToBone(bone, backpack_conf, slot)
             self:removeFromBone(bone)
         end
 
-        LoadAnimationDictionary(animationDict)
-        ClearPedTasks(PlayerPed)
-        TaskPlayAnim(PlayerPed, animationDict, animationName, 2.0, 2.0, -1, 51, 0, false, false, false)
-        RemoveAnimDict(animationDict)
-        Wait(50)
+        if animationDict and animationName then
+            ClearPedTasks(PlayerPed)
+            LoadAnimationDictionary(animationDict)
+            TaskPlayAnim(PlayerPed, animationDict, animationName, 2.0, 2.0, -1, 51, 0, false, false, false)
+            RemoveAnimDict(animationDict)
+            Wait(50)
+        end
 
         -- Attach the prop to the specified bone
         local boneIndex = self.boneInfo[bone].boneIndex
