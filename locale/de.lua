@@ -1,3 +1,5 @@
+if IsHarmonyStarted() then return end
+
 -- Please take this example with a grain of salt, as I created it using ChatGPT.
 local de = {
     menu = {

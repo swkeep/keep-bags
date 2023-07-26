@@ -1,3 +1,5 @@
+if IsHarmonyStarted() then return end
+
 -- do not change anything in this file if you don't know what are you doing
 local Shared = exports['keep-harmony']:Shared()
 

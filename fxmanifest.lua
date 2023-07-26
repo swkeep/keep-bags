@@ -8,6 +8,7 @@ author "Swkeep#7049"
 repository 'https://github.com/swkeep/keep-bags'
 
 shared_scripts {
+     'shared/harmony.lua',
      'locale/en.lua',
      'locale/de.lua',
      'locale/ar.lua',
@@ -30,6 +31,9 @@ server_script {
      'server/lockpick.lua',
 }
 
-dependency 'oxmysql'
+dependencies {
+     'oxmysql',
+     'keep-harmony'
+}
 
 lua54 'yes'

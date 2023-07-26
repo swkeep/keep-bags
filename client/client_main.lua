@@ -7,6 +7,7 @@
 --                             | |
 --                             |_|
 -- https://github.com/swkeep
+if IsHarmonyStarted() then return end
 
 local Harmony = exports["keep-harmony"]:GetCoreObject()
 

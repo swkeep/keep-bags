@@ -1,3 +1,5 @@
+if IsHarmonyStarted() then return end
+
 local Harmony              = exports['keep-harmony']:GetCoreObject()
 local getAppearance        = Harmony.Ped.GetAppearance
 local getPedGender         = Harmony.Ped.GetPedGender

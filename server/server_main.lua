@@ -7,6 +7,8 @@
 --                             | |
 --                             |_|
 -- https://github.com/swkeep
+if IsHarmonyStarted() then return end
+
 local resource_name = GetCurrentResourceName()
 local Harmony = exports["keep-harmony"]:GetCoreObject()
 local Shared = exports["keep-harmony"]:Shared()
@@ -282,7 +284,7 @@ AddEventHandler('onResourceStart', function(resource)
      Wait(1000)
 
      exports['keep-harmony']:ShowInformation()
-     exports['keep-harmony']:UpdateChecker()
+     -- exports['keep-harmony']:UpdateChecker()
 end)
 
 -- items

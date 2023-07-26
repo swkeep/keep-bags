@@ -1,3 +1,5 @@
+if IsHarmonyStarted() then return end
+
 -- cache natives
 local HasAnimDictLoaded = HasAnimDictLoaded
 local RequestAnimDict = RequestAnimDict

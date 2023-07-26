@@ -1,3 +1,5 @@
+if IsHarmonyStarted() then return end
+
 local Harmony = exports['keep-harmony']:GetCoreObject()
 local resource_name = GetCurrentResourceName()
 -----
