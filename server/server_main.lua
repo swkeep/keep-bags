@@ -13,7 +13,7 @@ local resource_name = GetCurrentResourceName()
 local Harmony = exports["keep-harmony"]:GetCoreObject()
 local Shared = exports["keep-harmony"]:Shared()
 local CreateUseableItem = Harmony.Item.CreateUseableItem
-local RandomId = Shared.RandomId
+local RandomId = Shared.Util.randomId
 local MySQL = MySQL
 
 local Backpack = {
@@ -156,16 +156,24 @@ local function notifyAndReturnInvalidItems(stash_items, valid_items, Player, sou
      end
 end
 
-function Open_backpack(source, id, item_name)
-     local backpack_conf = GetBackpackConfig(item_name)
 
-     Harmony.Stash('Bag_', id).Open(source, {
-          metadata = {
-               size = backpack_conf.size or 10000,
-               slots = backpack_conf.slots or 6,
-          },
-          duration = Config.duration.open
-     }, true, { animDict = "clothingshirt", anim = "try_shirt_positive_d", flags = 49 })
+local function get_opening_duration(bag_config)
+     return bag_config.duration and bag_config.duration.opening or Config.duration.open
+end
+
+function Open_backpack(src, id, item_name)
+     local backpack_conf = GetBackpackConfig(item_name)
+     local stash = Harmony.Stash('Bag_', id)
+     local size = backpack_conf.size or 10000
+     local slots = backpack_conf.slots or 6
+
+     stash.Open(src, slots, size, get_opening_duration(backpack_conf))
+
+     stash.observer(function(a, b)
+          Shared.pt(a)
+
+          Shared.pt(b)
+     end)
 end
 
 local function backpack_use(source, item_name, backpack_conf, item_ref)

@@ -4,7 +4,7 @@ Config.max_inventory_slots                = 41
 
 Config.duration                           = {
      open = 1,  -- sec
-     close = 1, -- Do not lower the closing duration to less than 2 seconds
+     close = 5, -- Do not lower the closing duration to less than 2 seconds
      lockpick = 5
 }
 
@@ -33,6 +33,11 @@ Config.Backpacks                          = {
           whitelist = {
                ['iron'] = true
           },
+          duration = {
+               opening = 1,
+               closing = 1,
+               lockpicking = 5
+          }
      },
      ['backpack2'] = {
           slots = 20,
@@ -176,5 +181,23 @@ Config.Backpacks                          = {
           whitelist = {
                ['weapon_pistol'] = true
           },
+     },
+}
+
+Config.Animation                          = {
+     opening = {
+          animation = {
+               animDict = "clothingshirt",
+               anim = "try_shirt_positive_d",
+               flags = 50
+          },
+          -- emote = {
+          --      name = 'hump'
+          -- },
+     },
+     closing = {
+          -- emote = {
+          --      name = 'sit'
+          -- },
      },
 }
