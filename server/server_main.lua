@@ -16,9 +16,7 @@ local CreateUseableItem = Harmony.Item.CreateUseableItem
 local RandomId = Shared.Util.randomId
 local MySQL = MySQL
 
-local Backpack = {
-     data = {}
-}
+local Backpack = { data = {} }
 ------------------------------------------ Functions -------------------------------------------------
 
 local function str_split(inputstr, sep)
@@ -30,18 +28,6 @@ local function str_split(inputstr, sep)
           table.insert(t, str)
      end
      return t
-end
-
-local function SaveStashItems(stashId, items)
-     if stashId and items then
-          for slot, item in pairs(items) do
-               item.description = nil
-          end
-          MySQL.Async.insert('INSERT INTO stashitems (stash, items) VALUES (:stash, :items) ON DUPLICATE KEY UPDATE items = :items', {
-               ['stash'] = stashId,
-               ['items'] = json.encode(items)
-          })
-     end
 end
 
 local function getItemAmount(item)
@@ -134,9 +120,13 @@ end
 local function filterValidItems(stash_items, backpack_conf)
      local valid_items
      if backpack_conf.whitelist then
-          valid_items = filter(stash_items, function(item) return backpack_conf.whitelist[string.lower(item.name)] end)
+          valid_items = filter(stash_items, function(item)
+               return backpack_conf.whitelist[string.lower(item.name)]
+          end)
      elseif backpack_conf.blacklist then
-          valid_items = filter(stash_items, function(item) return not backpack_conf.blacklist[string.lower(item.name)] end)
+          valid_items = filter(stash_items, function(item)
+               return not backpack_conf.blacklist[string.lower(item.name)]
+          end)
      else
           valid_items = stash_items
      end
@@ -161,19 +151,37 @@ local function get_opening_duration(bag_config)
      return bag_config.duration and bag_config.duration.opening or Config.duration.open
 end
 
+local function closeBag(source, id, initialItems)
+     local Player = Harmony.Player.Object(source)
+     local backpack = Backpack.data[id]
+     if not backpack then return end
+
+     local backpack_conf = GetBackpackConfig(backpack['item_name'])
+     local stash_items = Harmony.Stash('Bag_', id).Items('inventory')
+
+     checkForNestedBackpacks(stash_items, id, source, Player)
+     checkForOtherBackpacks(stash_items, source, Player)
+     local valid_items = filterValidItems(stash_items, backpack_conf)
+     Harmony.Stash('Bag_', id).Save(stash_items)
+     notifyAndReturnInvalidItems(stash_items, valid_items, Player, source)
+
+     Backpack.data[id] = nil
+end
+
 function Open_backpack(src, id, item_name)
      local backpack_conf = GetBackpackConfig(item_name)
      local stash = Harmony.Stash('Bag_', id)
      local size = backpack_conf.size or 10000
      local slots = backpack_conf.slots or 6
 
-     stash.Open(src, slots, size, get_opening_duration(backpack_conf))
-
-     stash.observer(function(a, b)
-          Shared.pt(a)
-
-          Shared.pt(b)
-     end)
+     if stash.Open(src, slots, size, get_opening_duration(backpack_conf)) then
+          stash.observer(function(a)
+               Backpack.data[id] = { source = src, item_name = item_name }
+               closeBag(src, id, a.initialItems)
+          end)
+     else
+          Harmony.Player.Notify(src, 'Bag is already open')
+     end
 end
 
 local function backpack_use(source, item_name, backpack_conf, item_ref)
@@ -201,11 +209,6 @@ local function backpack_use(source, item_name, backpack_conf, item_ref)
           Harmony.Item.Metadata.Save(Player, item_ref)
           Harmony.Player.Notify(source, 'Opening', 'success')
      end
-
-     Backpack.data[metadata.id] = {
-          source = source,
-          item_name = item_name,
-     }
 
      if backpack_conf.locked and not metadata.password then
           Harmony.Event.emitNet('client:set_password', source, metadata.id)
@@ -264,32 +267,15 @@ Harmony.Event.onNet('server:set_password', function(source, id, password)
      end
 end)
 
-Harmony.Event.onNet('server:stash:closed', function(source, id)
-     local Player = Harmony.Player.Object(source)
-     local backpack = Backpack.data[id]
-     if not backpack then return end
-
-     local backpack_conf = GetBackpackConfig(backpack['item_name'])
-     local stash_items = Harmony.Stash('Bag_', id).Items()
-
-     checkForNestedBackpacks(stash_items, id, source, Player)
-     checkForOtherBackpacks(stash_items, source, Player)
-     local valid_items = filterValidItems(stash_items, backpack_conf)
-     notifyAndReturnInvalidItems(stash_items, valid_items, Player, source)
-
-     Harmony.Stash('Bag_', id).Save(stash_items)
-end)
-
-RegisterNetEvent('keep-backpack:server:saveBackpack', function(source, stashId, items)
-     local stashIdData = str_split(stashId, "_")
-     local backpackId = stashIdData[2]
-
-     SaveStashItems(stashId, items)
+RegisterNetEvent('keep-harmony:stash:opening->cancel', function(prefix, id)
+     if prefix ~= 'Bag_' then return end
+     local src = source
+     Backpack.data[id] = nil
 end)
 
 AddEventHandler('onResourceStart', function(resource)
      if resource ~= resource_name then return end
-     Wait(1000)
+     Wait(1500)
 
      exports['keep-harmony']:ShowInformation()
      -- exports['keep-harmony']:UpdateChecker()

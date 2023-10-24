@@ -20,7 +20,7 @@ Config.lockpick_whitelist                 = {
 -- (important) do not use both prop and cloth at same time just one.
 Config.Backpacks                          = {
      ['backpack1'] = {
-          slots = 10,
+          slots = 15,
           size = 100000,
           cloth = {
                male = {
@@ -31,11 +31,15 @@ Config.Backpacks                          = {
                }
           },
           whitelist = {
-               ['iron'] = true
+               ['iron'] = true,
+               ['steel'] = true,
+          },
+          blacklist = {
+               ['water'] = true,
+               ['steel'] = true,
           },
           duration = {
                opening = 1,
-               closing = 1,
                lockpicking = 5
           }
      },
@@ -49,9 +53,6 @@ Config.Backpacks                          = {
                female = {
                     ["bag"] = { item = 85, texture = 13 }
                }
-          },
-          blacklist = {
-               ['iron'] = true
           },
      },
      ['backpack3'] = {
@@ -163,9 +164,9 @@ Config.Backpacks                          = {
                     ["accessory"] = { item = 123, texture = 0 }
                },
           },
-          whitelist = {
-               ['weapon_pistol'] = true
-          },
+          -- whitelist = {
+          --      ['weapon_pistol'] = true
+          -- },
      },
      ['policepouches1'] = {
           slots = 12,
@@ -178,26 +179,26 @@ Config.Backpacks                          = {
                     ["accessory"] = { item = 123, texture = 0 }
                },
           },
-          whitelist = {
-               ['weapon_pistol'] = true
-          },
+          -- whitelist = {
+          --      ['weapon_pistol'] = true
+          -- },
      },
 }
 
-Config.Animation                          = {
-     opening = {
-          animation = {
-               animDict = "clothingshirt",
-               anim = "try_shirt_positive_d",
-               flags = 50
-          },
-          -- emote = {
-          --      name = 'hump'
-          -- },
-     },
-     closing = {
-          -- emote = {
-          --      name = 'sit'
-          -- },
-     },
-}
+-- Config.Animation                          = {
+--      opening = {
+--           animation = {
+--                animDict = "clothingshirt",
+--                anim = "try_shirt_positive_d",
+--                flags = 50
+--           },
+--           -- emote = {
+--           --      name = 'hump'
+--           -- },
+--      },
+--      closing = {
+--           -- emote = {
+--           --      name = 'sit'
+--           -- },
+--      },
+-- }
