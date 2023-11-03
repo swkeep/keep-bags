@@ -34,7 +34,7 @@ local function use_lockpick(source, item)
 
     local items = {}
 
-    for item_name, value in pairs(Config.Backpacks) do
+    for item_name, value in pairs(Config.Bags) do
         if value.locked then
             local found_items = Harmony.Item.Search_by.Name(Player, item_name)
             if found_items then

@@ -19,17 +19,6 @@ local MySQL = MySQL
 local Backpack = { data = {} }
 ------------------------------------------ Functions -------------------------------------------------
 
-local function str_split(inputstr, sep)
-     if sep == nil then
-          sep = "%s"
-     end
-     local t = {}
-     for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
-          table.insert(t, str)
-     end
-     return t
-end
-
 local function getItemAmount(item)
      if item.amount then
           return item.amount
@@ -81,7 +70,7 @@ local function hasTooManyBackpacks(Player, item)
 end
 
 local function GetBackpackConfig(item_name)
-     return Config.Backpacks[item_name]
+     return Config.Bags[item_name]
 end
 
 local function checkForNestedBackpacks(stash_items, backpack_id, source, Player)
@@ -253,6 +242,7 @@ Harmony.Event.onNet('server:set_password', function(source, id, password)
           Harmony.Player.Notify(source, Locale.get('errors.try_better_password'), 'error')
           return
      end
+
      local Player = Harmony.Player.Object(source)
      local backpack = Backpack.data[id]
      if backpack and source == backpack['source'] then
@@ -284,7 +274,7 @@ end)
 -- items
 
 CreateThread(function()
-     for item_name, backpack_conf in pairs(Config.Backpacks) do
+     for item_name, backpack_conf in pairs(Config.Bags) do
           CreateUseableItem(item_name, function(source, item_ref)
                backpack_use(source, item_name, backpack_conf, item_ref)
           end)

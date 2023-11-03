@@ -1,6 +1,6 @@
 local backpacksConfig = {}
 
-for name, value in pairs(Config.Backpacks) do
+for name, value in pairs(Config.Bags) do
      backpacksConfig[name] = value
 end
 
