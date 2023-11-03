@@ -1,7 +1,24 @@
 local backpacksConfig = {}
 
 for name, value in pairs(Config.Bags) do
-     backpacksConfig[name] = value
+     local conf = value
+
+     if conf.whitelist then
+          local list = {}
+          for key, item_name in pairs(conf.whitelist) do
+               list[item_name] = true
+          end
+
+          conf.whitelist = list
+     elseif conf.blacklist then
+          local list = {}
+          for key, item_name in pairs(conf.blacklist) do
+               list[item_name] = true
+          end
+          conf.blacklist = list
+     end
+
+     backpacksConfig[name] = conf
 end
 
 -- check if an items is a backpack
