@@ -14,8 +14,7 @@ local Harmony = exports["keep-harmony"]:GetCoreObject()
 local Shared = exports["keep-harmony"]:Shared()
 local CreateUseableItem = Harmony.Item.CreateUseableItem
 local RandomId = Shared.Util.randomId
-local MySQL = MySQL
-
+local CustomDJB2 = Shared.CustomDJB2
 local Backpack = { data = {} }
 ------------------------------------------ Functions -------------------------------------------------
 
@@ -135,7 +134,6 @@ local function notifyAndReturnInvalidItems(stash_items, valid_items, Player, sou
      end
 end
 
-
 local function get_opening_duration(bag_config)
      return bag_config.duration and bag_config.duration.opening or Config.duration.open
 end
@@ -157,7 +155,7 @@ local function closeBag(source, id, initialItems)
      Backpack.data[id] = nil
 end
 
-function Open_backpack(src, id, item_name)
+local function openBag(src, id, item_name)
      local backpack_conf = GetBackpackConfig(item_name)
      local stash = Harmony.Stash('Bag_', id)
      local size = backpack_conf.size or 10000
@@ -173,11 +171,13 @@ function Open_backpack(src, id, item_name)
      end
 end
 
+AddEventHandler('keep-bags:server:openBag', openBag)
+
 local function backpack_use(source, item_name, backpack_conf, item_ref)
      local Player = Harmony.Player.Object(source)
      if not Player then return end
      local Identifier = Harmony.Player.Identifier(Player)
-     local Hash = Shared.CustomDJB2(Identifier)
+     local Hash = CustomDJB2(Identifier)
      local metadata = Harmony.Item.Metadata.Get(item_ref)
 
      if type(metadata) == 'table' and metadata.ID then
@@ -212,7 +212,7 @@ local function backpack_use(source, item_name, backpack_conf, item_ref)
      if backpack_conf.locked then
           Harmony.Event.emitNet('client:enter_password', source, metadata.id)
      else
-          Open_backpack(source, metadata.id, item_name)
+          openBag(source, metadata.id, item_name)
      end
 end
 
@@ -230,7 +230,7 @@ Harmony.Event.onNet('server:open_with_password', function(source, id, password)
           local metadata = Harmony.Item.Metadata.Get(backpack_item)
 
           if metadata.password == password then
-               Open_backpack(source, id, backpack['item_name'])
+               openBag(source, id, backpack['item_name'])
           else
                Harmony.Player.Notify(source, Locale.get('errors.wrong_password'), 'error')
           end
@@ -259,6 +259,7 @@ end)
 
 RegisterNetEvent('keep-harmony:stash:opening->cancel', function(prefix, id)
      if prefix ~= 'Bag_' then return end
+
      local src = source
      Backpack.data[id] = nil
 end)
