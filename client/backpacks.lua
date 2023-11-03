@@ -97,7 +97,7 @@ end
 
 function HandleBackpackLimits()
     local total = backpacks.count
-    if notAllowedToCarryMultipleBackpacks and total >= maxAllowedBackpacks then
+    if notAllowedToCarryMultipleBackpacks and total > maxAllowedBackpacks then
         FreezePlayer()
         Harmony.Player.Notify(Locale.get('errors.max_backpacks'):format(maxAllowedBackpacks))
     else
