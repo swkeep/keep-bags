@@ -1,24 +1,32 @@
-Config                                    = Config or {}
+Config = {}
 
-Config.max_inventory_slots                = 41
+-- Maximum inventory slots for players (inventory slots)
+Config.max_inventory_slots = 41
 
-Config.duration                           = {
-     open = 1,  -- sec
-     close = 5, -- Do not lower the closing duration to less than 2 seconds
-     lockpick = 5
+-- Not used in this context
+Config.ClothingScript = ''
+
+-- Default durations (in seconds)
+Config.duration = {
+     open = 1,    -- Time to open a bag
+     lockpick = 5 -- Time to lockpick a bag
 }
 
+-- Prevent players from carrying multiple backpacks
+-- They will stuck in one place until they put the extra bags away
 Config.notAllowedToCarryMultipleBackpacks = true
-Config.maxAllowedBackpacks                = 4
+-- Maximum allowed backpacks per player
+Config.maxAllowedBackpacks = 1
 
-Config.lockpick_whitelist                 = {
+-- Whitelist for lockpicking access
+Config.lockpick_whitelist = {
      active = true,
-     jobs = { 'police' },
+     jobs = { 'police' }, -- Jobs with lockpicking access
      citizenid = {}
 }
 
--- (important) do not use both prop and cloth at same time just one.
-Config.Backpacks                          = {
+-- Backpack configurations
+Config.Bags = {
      ['backpack1'] = {
           slots = 15,
           size = 100000,
@@ -27,16 +35,12 @@ Config.Backpacks                          = {
                     ["bag"] = { item = 36, texture = 0 }
                },
                female = {
-                    ["bag"] = { item = 85, texture = 13 }
+                    ["vest"] = { item = 61, texture = 0 }
                }
           },
           whitelist = {
                ['iron'] = true,
-               ['steel'] = true,
-          },
-          blacklist = {
-               ['water'] = true,
-               ['steel'] = true,
+               ['steel'] = true
           },
           duration = {
                opening = 1,
@@ -54,66 +58,10 @@ Config.Backpacks                          = {
                     ["bag"] = { item = 85, texture = 13 }
                }
           },
-     },
-     ['backpack3'] = {
-          slots = 30,
-          size = 300000,
-          cloth = {
-               male = {
-                    ["bag"] = { item = 36, texture = 3 }
-               },
-               female = {
-                    ["bag"] = { item = 85, texture = 13 }
-               }
-          },
-     },
-     ['backpack4'] = {
-          slots = 20,
-          size = 200000,
-          cloth = {
-               male = {
-                    ["bag"] = { item = 36, texture = 3 }
-               },
-               female = {
-                    ["bag"] = { item = 85, texture = 13 }
-               }
-          },
-     },
-     ['backpack5'] = {
-          slots = 20,
-          size = 200000,
-          cloth = {
-               male = {
-                    ["bag"] = { item = 69, texture = 0 }
-               },
-               female = {
-                    ["bag"] = { item = 85, texture = 13 }
-               }
-          },
-     },
-     ['backpack6'] = {
-          slots = 20,
-          size = 200000,
-          cloth = {
-               male = {
-                    ["bag"] = { item = 69, texture = 0 }
-               },
-               female = {
-                    ["bag"] = { item = 85, texture = 13 }
-               }
-          },
-     },
-     ['backpack7'] = {
-          slots = 20,
-          size = 200000,
-          cloth = {
-               male = {
-                    ["bag"] = { item = 69, texture = 0 }
-               },
-               female = {
-                    ["bag"] = { item = 85, texture = 13 }
-               }
-          },
+          blacklist = {
+               ['water'] = true,
+               ['steel'] = true
+          }
      },
      ['duffle1'] = {
           slots = 20,
@@ -125,34 +73,19 @@ Config.Backpacks                          = {
                female = {
                     ["accessory"] = { item = 123, texture = 0 }
                }
-          },
+          }
      },
-     ['duffle2'] = {
-          slots = 40,
-          size = 400000,
-          cloth = {
-               male = {
-                    ["bag"] = { item = 82, texture = 0 }
-               },
-               female = {
-                    ["bag"] = { item = 85, texture = 13 }
-               }
-          },
+     ['paramedicbag'] = {
+          slots = 10,
+          size = 50000,
+          prop = GetProp('paramedicbag') -- Use props from shared/props.lua
      },
      ['briefcase'] = {
           slots = 5,
           size = 10000,
           locked = true,
-          prop = GetProp('suitcase2'),
+          prop = GetProp('suitcase2') -- Use props from shared/props.lua
      },
-     ['paramedicbag'] = {
-          slots = 10,
-          size = 50000,
-          prop = GetProp('paramedicbag'),
-     },
-
-     -- police
-
      ['policepouches'] = {
           slots = 6,
           size = 200000,
@@ -162,11 +95,8 @@ Config.Backpacks                          = {
                },
                female = {
                     ["accessory"] = { item = 123, texture = 0 }
-               },
-          },
-          -- whitelist = {
-          --      ['weapon_pistol'] = true
-          -- },
+               }
+          }
      },
      ['policepouches1'] = {
           slots = 12,
@@ -177,28 +107,7 @@ Config.Backpacks                          = {
                },
                female = {
                     ["accessory"] = { item = 123, texture = 0 }
-               },
-          },
-          -- whitelist = {
-          --      ['weapon_pistol'] = true
-          -- },
-     },
+               }
+          }
+     }
 }
-
--- Config.Animation                          = {
---      opening = {
---           animation = {
---                animDict = "clothingshirt",
---                anim = "try_shirt_positive_d",
---                flags = 50
---           },
---           -- emote = {
---           --      name = 'hump'
---           -- },
---      },
---      closing = {
---           -- emote = {
---           --      name = 'sit'
---           -- },
---      },
--- }
