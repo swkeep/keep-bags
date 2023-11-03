@@ -38,6 +38,7 @@ Config.Bags = {
                     ["vest"] = { item = 61, texture = 0 }
                }
           },
+          -- If active, the backpack only accepts items listed here and returns other items to the player
           whitelist = {
                ['iron'] = true,
                ['steel'] = true
@@ -58,6 +59,7 @@ Config.Bags = {
                     ["bag"] = { item = 85, texture = 13 }
                }
           },
+          -- If active, the backpack accepts all items except those listed here
           blacklist = {
                ['water'] = true,
                ['steel'] = true
