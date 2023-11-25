@@ -3,8 +3,7 @@ Config = {}
 -- Maximum inventory slots for players (inventory slots)
 Config.max_inventory_slots = 41
 
--- Not used in this context
-Config.ClothingScript = ''
+Config.ClothingScript = 'illenium-appearance' -- illenium-appearance or qb-clothing
 
 -- Default durations (in seconds)
 Config.duration = {
@@ -27,7 +26,8 @@ Config.lockpick_whitelist = {
 
 -- Backpack configurations
 Config.Bags = {
-     ['backpack1'] = {
+     {
+          item = 'backpack1',
           slots = 15,
           size = 100000,
           cloth = {
@@ -48,7 +48,8 @@ Config.Bags = {
                lockpicking = 5
           }
      },
-     ['backpack2'] = {
+     {
+          item = 'backpack2',
           slots = 20,
           size = 200000,
           cloth = {
@@ -65,7 +66,8 @@ Config.Bags = {
                'steel'
           }
      },
-     ['duffle1'] = {
+     {
+          item = 'duffle1',
           slots = 20,
           size = 200000,
           cloth = {
@@ -77,18 +79,21 @@ Config.Bags = {
                }
           }
      },
-     ['paramedicbag'] = {
+     {
+          item = 'paramedicbag',
           slots = 10,
           size = 50000,
           prop = GetProp('paramedicbag') -- Use props from shared/props.lua
      },
-     ['briefcase'] = {
+     {
+          item = 'briefcase',
           slots = 5,
           size = 10000,
           locked = true,
           prop = GetProp('suitcase2') -- Use props from shared/props.lua
      },
-     ['policepouches'] = {
+     {
+          item = 'policepouches',
           slots = 6,
           size = 200000,
           cloth = {
@@ -100,7 +105,8 @@ Config.Bags = {
                }
           }
      },
-     ['policepouches1'] = {
+     {
+          item = 'policepouches1',
           slots = 12,
           size = 400000,
           cloth = {

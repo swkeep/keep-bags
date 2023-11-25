@@ -11,7 +11,6 @@ shared_scripts {
      'shared/harmony.lua',
      'locale/en.lua',
      'locale/de.lua',
-     'locale/ar.lua',
      'shared/props.lua',
      'config.lua',
      'shared/shared.lua',

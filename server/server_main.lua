@@ -68,10 +68,6 @@ local function hasTooManyBackpacks(Player, item)
      return numBackpacksOfType > Config.maximum_allowed
 end
 
-local function GetBackpackConfig(item_name)
-     return Config.Bags[item_name]
-end
-
 local function checkForNestedBackpacks(stash_items, backpack_id, source, Player)
      local has_backpack_inception = false
      for key, item in pairs(stash_items) do
@@ -149,8 +145,8 @@ local function closeBag(source, id, initialItems)
      checkForNestedBackpacks(stash_items, id, source, Player)
      checkForOtherBackpacks(stash_items, source, Player)
      local valid_items = filterValidItems(stash_items, backpack_conf)
-     Harmony.Stash('Bag_', id).Save(stash_items)
      notifyAndReturnInvalidItems(stash_items, valid_items, Player, source)
+     Harmony.Stash('Bag_', id).Save(stash_items)
 
      Backpack.data[id] = nil
 end
@@ -162,8 +158,9 @@ local function openBag(src, id, item_name)
      local slots = backpack_conf.slots or 6
 
      if stash.Open(src, slots, size, get_opening_duration(backpack_conf)) then
+          Backpack.data[id] = { source = src, item_name = item_name }
+
           stash.observer(function(a)
-               Backpack.data[id] = { source = src, item_name = item_name }
                closeBag(src, id, a.initialItems)
           end)
      else
@@ -272,10 +269,23 @@ AddEventHandler('onResourceStart', function(resource)
      -- exports['keep-harmony']:UpdateChecker()
 end)
 
+AddEventHandler('playerDropped', function(reason)
+     local src = source -- Player ID who disconnected
+
+     for key, value in pairs(Backpack.data) do
+          if value.source == src then
+               closeBag(src, key, {})
+               break
+          end
+     end
+end)
+
 -- items
 
 CreateThread(function()
-     for item_name, backpack_conf in pairs(Config.Bags) do
+     local bags = GetAllBags()
+
+     for item_name, backpack_conf in pairs(bags) do
           CreateUseableItem(item_name, function(source, item_ref)
                backpack_use(source, item_name, backpack_conf, item_ref)
           end)

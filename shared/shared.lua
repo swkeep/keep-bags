@@ -1,14 +1,14 @@
 local backpacksConfig = {}
 
-for name, value in pairs(Config.Bags) do
+for _, value in pairs(Config.Bags) do
      local conf = value
+     local name = value.item
 
      if conf.whitelist then
           local list = {}
           for key, item_name in pairs(conf.whitelist) do
                list[item_name] = true
           end
-
           conf.whitelist = list
      elseif conf.blacklist then
           local list = {}
@@ -18,7 +18,12 @@ for name, value in pairs(Config.Bags) do
           conf.blacklist = list
      end
 
-     backpacksConfig[name] = conf
+     if backpacksConfig[name] then
+          -- Duplicate item warning
+          print(('Duplicate Item: Ignoring %s. This item is already configured'):format(name))
+     else
+          backpacksConfig[name] = conf
+     end
 end
 
 -- check if an items is a backpack
@@ -29,4 +34,8 @@ end
 -- get backpack config by name
 function GetBackpackConfig(backpack_name)
      return backpacksConfig[backpack_name]
+end
+
+function GetAllBags()
+     return backpacksConfig
 end

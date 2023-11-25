@@ -1,6 +1,8 @@
 local isHarmonyStarted = GetResourceState('keep-harmony'):find('start')
+local appearance = GetResourceState('illenium-appearance'):find('start')
 
 local showen = false
+local showen2 = false
 
 function IsHarmonyStarted()
     if not isHarmonyStarted and not showen then
@@ -56,5 +58,10 @@ feel free to seek help from the official support channel
 Discord: https://discord.gg/ccMArCwrPV
 --------------------------------------------------------------]])
     end
+
+    if not appearance and not showen2 then
+        warn('You are missing illenium-appearance install it from here https://github.com/iLLeniumStudios/illenium-appearance')
+    end
+
     if not isHarmonyStarted then return true end
 end
