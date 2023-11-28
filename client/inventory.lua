@@ -77,8 +77,32 @@ end)
 --     Load()
 -- end)
 
-RegisterNetEvent('illenium-appearance:client:reloadSkin', function()
-    Wait(500)
+if Config.clothingScript == 'qb-clothing' then
+    RegisterNetEvent('qb-clothing:client:reloadOutfits', function(myOutfits)
+        Wait(500)
 
-    Load()
-end)
+        Load()
+    end)
+
+    RegisterNetEvent('qb-clothing:client:loadPlayerClothing', function(myOutfits)
+        Wait(1000)
+
+        Load()
+    end)
+
+    RegisterNetEvent('qb-clothing:client->open', function(myOutfits)
+        BodyAttachment:clearAll()
+    end)
+
+    AddEventHandler('qb-clothing:client:onMenuClose', function()
+        Wait(500)
+
+        Load()
+    end)
+else
+    RegisterNetEvent('illenium-appearance:client:reloadSkin', function()
+        Wait(500)
+
+        Load()
+    end)
+end

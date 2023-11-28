@@ -3,7 +3,7 @@ Config = {}
 -- Maximum inventory slots for players (inventory slots)
 Config.max_inventory_slots = 41
 
-Config.ClothingScript = 'illenium-appearance' -- illenium-appearance or qb-clothing
+Config.clothingScript = 'qb-clothing' -- illenium-appearance or qb-clothing
 
 -- Default durations (in seconds)
 Config.duration = {
@@ -15,7 +15,7 @@ Config.duration = {
 -- They will stuck in one place until they put the extra bags away
 Config.notAllowedToCarryMultipleBackpacks = true
 -- Maximum allowed backpacks per player
-Config.maxAllowedBackpacks = 1
+Config.maxAllowedBackpacks = 2
 
 -- Whitelist for lockpicking access
 Config.lockpick_whitelist = {

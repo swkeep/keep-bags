@@ -47,16 +47,12 @@ Check out Keep-bags preview for a better understanding of the mod's functionalit
 - qb-core/esx
 - qb-inventory/ox_inventory
 - ox_lib (required on esx/optional for qbcore)
-- [illenium-appearance](https://github.com/iLLeniumStudios/illenium-appearance)
-- rpemotes/dpemotes/scully_emotemenu
 - **[keep-harmony](https://swkeep.tebex.io/package/5592482)**
+- [illenium-appearance](https://github.com/iLLeniumStudios/illenium-appearance) / [qb-clothing](https://github.com/qbcore-framework/qb-clothing)
 
 # How to Install
 
 Follow the steps mentioned below to install keep-bags:
-
-- Before installing, if you're updating from an old version (keep Backpack).
-- Make sure you revert the changes on QB inventory so that Bags are saved to the database.
 
 ## step 1:
 
@@ -67,174 +63,14 @@ Follow the steps mentioned below to install keep-bags:
 - Add Below code to `qb-core/shared/items.lua`
 
 ```lua
-["backpack1"] = {
-     ["name"] = "backpack1",
-     ["label"] = "Backpack",
-     ["weight"] = 7500,
-     ["type"] = "item",
-     ["image"] = "backpack1.png",
-     ["unique"] = true,
-     ["useable"] = true,
-     ["shouldClose"] = true,
-     ["combinable"] = nil,
-     ["description"] = "A stylish backpack"
-},
-["backpack2"] = {
-     ["name"] = "backpack2",
-     ["label"] = "Backpack",
-     ["weight"] = 15000,
-     ["type"] = "item",
-     ["image"] = "backpack2.png",
-     ["unique"] = true,
-     ["useable"] = true,
-     ["shouldClose"] = true,
-     ["combinable"] = nil,
-     ["description"] = "A stylish backpack"
-},
-["backpack3"] = {
-     ["name"] = "backpack3",
-     ["label"] = "Backpack",
-     ["weight"] = 15000,
-     ["type"] = "item",
-     ["image"] = "backpack3.png",
-     ["unique"] = true,
-     ["useable"] = true,
-     ["shouldClose"] = true,
-     ["combinable"] = nil,
-     ["description"] = "A stylish backpack"
-},
-["backpack4"] = {
-     ["name"] = "backpack4",
-     ["label"] = "Backpack",
-     ["weight"] = 15000,
-     ["type"] = "item",
-     ["image"] = "backpack4.png",
-     ["unique"] = true,
-     ["useable"] = true,
-     ["shouldClose"] = true,
-     ["combinable"] = nil,
-     ["description"] = "A stylish backpack"
-},
-["backpack5"] = {
-     ["name"] = "backpack5",
-     ["label"] = "Backpack",
-     ["weight"] = 15000,
-     ["type"] = "item",
-     ["image"] = "backpack5.png",
-     ["unique"] = true,
-     ["useable"] = true,
-     ["shouldClose"] = true,
-     ["combinable"] = nil,
-     ["description"] = "A stylish backpack"
-},
-["backpack6"] = {
-     ["name"] = "backpack6",
-     ["label"] = "Backpack",
-     ["weight"] = 15000,
-     ["type"] = "item",
-     ["image"] = "backpack6.png",
-     ["unique"] = true,
-     ["useable"] = true,
-     ["shouldClose"] = true,
-     ["combinable"] = nil,
-     ["description"] = "A stylish backpack"
-},
-["backpack7"] = {
-     ["name"] = "backpack7",
-     ["label"] = "Backpack",
-     ["weight"] = 15000,
-     ["type"] = "item",
-     ["image"] = "backpack7.png",
-     ["unique"] = true,
-     ["useable"] = true,
-     ["shouldClose"] = true,
-     ["combinable"] = nil,
-     ["description"] = "A stylish backpack"
-},
-["duffle1"] = {
-     ["name"] = "duffle1",
-     ["label"] = "Duffle bag",
-     ["weight"] = 15000,
-     ["type"] = "item",
-     ["image"] = "duffle1.png",
-     ["unique"] = true,
-     ["useable"] = true,
-     ["shouldClose"] = true,
-     ["combinable"] = nil,
-     ["description"] = "A stylish duffle bag"
-},
-["duffle2"] = {
-     ["name"] = "duffle2",
-     ["label"] = "Duffle bag",
-     ["weight"] = 15000,
-     ["type"] = "item",
-     ["image"] = "duffle2.png",
-     ["unique"] = true,
-     ["useable"] = true,
-     ["shouldClose"] = true,
-     ["combinable"] = nil,
-     ["description"] = "A stylish duffle bag"
-},
-["briefcase"] = {
-     ["name"] = "briefcase",
-     ["label"] = "Briefcase",
-     ["weight"] = 10000,
-     ["type"] = "item",
-     ["image"] = "briefcase.png",
-     ["unique"] = true,
-     ["useable"] = true,
-     ["shouldClose"] = true,
-     ["combinable"] = nil,
-     ["description"] = "A portable rectangular case used for carrying important documents, files, or other personal belongings."
-},
-["paramedicbag"] = {
-     ["name"] = "paramedicbag",
-     ["label"] = "Paramedic bag",
-     ["weight"] = 5000,
-     ["type"] = "item",
-     ["image"] = "paramedicbag.png",
-     ["unique"] = true,
-     ["useable"] = true,
-     ["shouldClose"] = true,
-     ["combinable"] = nil,
-     ["description"] = "A medical bag used by paramedics, containing essential supplies for emergency care."
-},
-["policepouches"] = {
-    ["name"] = "policepouches",
-    ["label"] = "Police Pouch",
-    ["weight"] = 5000,
-    ["type"] = "item",
-    ["image"] = "policepouches.png",
-    ["unique"] = true,
-    ["useable"] = true,
-    ["shouldClose"] = true,
-    ["combinable"] = nil,
-    ["description"] = "A pouch used by police officers to store and carry essential supplies such as handcuffs, pepper spray, and other tactical equipment."
-},
-["policepouches1"] = {
-    ["name"] = "policepouches1",
-    ["label"] = "Police Pouch",
-    ["weight"] = 5000,
-    ["type"] = "item",
-    ["image"] = "policepouches1.png",
-    ["unique"] = true,
-    ["useable"] = true,
-    ["shouldClose"] = true,
-    ["combinable"] = nil,
-    ["description"] = "A larger version of the police pouch used to store additional tactical gear and equipment."
-},
-["briefcaselockpicker"] = {
-     ["name"] = "briefcaselockpicker",
-     ["label"] = "Briefcase Lockpicker",
-     ["weight"] = 500,
-     ["type"] = "item",
-     ["image"] = "lockpick.png",
-     ["unique"] = false,
-     ["useable"] = true,
-     ["shouldClose"] = true,
-     ["combinable"] = nil,
-     ["description"] = "Briefcase Lockpicker"
-},
+ backpack1                    = { name = "backpack1", label = "Backpack", weight = 7500, type = "item", image = "backpack1.png", unique = true, useable = true, shouldClose = true, combinable = nil, description = "A stylish backpack" },
+    backpack2                    = { name = "backpack2", label = "Backpack", weight = 15000, type = "item", image = "backpack2.png", unique = true, useable = true, shouldClose = true, combinable = nil, description = "A stylish backpack" },
+    duffle1                      = { name = "duffle1", label = "Duffle bag", weight = 15000, type = "item", image = "duffle1.png", unique = true, useable = true, shouldClose = true, combinable = nil, description = "A stylish duffle bag" },
+    briefcase                    = { name = "briefcase", label = "Briefcase", weight = 10000, type = "item", image = "briefcase.png", unique = true, useable = true, shouldClose = true, combinable = nil, description = "A portable rectangular case used for carrying important documents, files, or other personal belongings." },
+    paramedicbag                 = { name = "paramedicbag", label = "Paramedic bag", weight = 5000, type = "item", image = "paramedicbag.png", unique = true, useable = true, shouldClose = true, combinable = nil, description = "A medical bag used by paramedics, containing essential supplies for emergency care." },
+    policepouches                = { name = "policepouches", label = "Police Pouch", weight = 5000, type = "item", image = "policepouches.png", unique = true, useable = true, shouldClose = true, combinable = nil, description = "A pouch used by police officers to store and carry essential supplies such as handcuffs, pepper spray, and other tactical equipment." },
+    policepouches1               = { name = "policepouches1", label = "Police Pouch", weight = 5000, type = "item", image = "policepouches1.png", unique = true, useable = true, shouldClose = true, combinable = nil, description = "A larger version of the police pouch used to store additional tactical gear and equipment." },
+    briefcaselockpicker          = { name = "briefcaselockpicker", label = "Briefcase Lockpicker", weight = 500, type = "item", image = "lockpick.png", unique = false, useable = true, shouldClose = true, combinable = nil, description = "Briefcase Lockpicker" },
 ```
 
 ## ESX (ox_inventory)
@@ -254,49 +90,7 @@ Follow the steps mentioned below to install keep-bags:
      close = true,
      description = "A stylish backpack"
 },
-["backpack3"] = {
-     label = "backpack3",
-     weight = 15,
-     stack = false,
-     close = true,
-     description = "A stylish backpack"
-},
-["backpack4"] = {
-     label = "backpack4",
-     weight = 15,
-     stack = false,
-     close = true,
-     description = "A stylish backpack"
-},
-["backpack5"] = {
-     label = "backpack5",
-     weight = 15,
-     stack = false,
-     close = true,
-     description = "A stylish backpack"
-},
-["backpack6"] = {
-     label = "backpack6",
-     weight = 15,
-     stack = false,
-     close = true,
-     description = "A stylish backpack"
-},
-["backpack7"] = {
-     label = "backpack7",
-     weight = 15,
-     stack = false,
-     close = true,
-     description = "A stylish backpack"
-},
 ["duffle1"] = {
-     label = "Duffle bag",
-     weight = 15,
-     stack = false,
-     close = true,
-     description = "A stylish duffle bag"
-},
-["duffle2"] = {
      label = "Duffle bag",
      weight = 15,
      stack = false,
@@ -339,6 +133,55 @@ Follow the steps mentioned below to install keep-bags:
      close = true,
      description = "Briefcase Lockpicker"
 }
+```
+
+## Only if you're using qb-clothing 
+Find the `openMenu` function in `client/main.lua` and then add this event at the end of it:
+
+```lua
+local function openMenu(allowedMenus)
+     -- existing code up there ...
+
+    TriggerEvent('qb-clothing:client->open')
+end
+```
+
+## Only if you're using qb-inventory
+Find the `SaveStashItems()` function in `server/main.lua` and then add this event at the end of it 
+
+```lua
+TriggerEvent('keep-harmony:stash->close', stashId)
+```
+
+after editing the function. The modified function should look like this:
+
+```lua
+local function SaveStashItems(stashId, items)
+	if Stashes[stashId].label == 'Stash-None' or not items then return end
+
+	for _, item in pairs(items) do
+		item.description = nil
+	end
+
+	MySQL.insert('INSERT INTO stashitems (stash, items) VALUES (:stash, :items) ON DUPLICATE KEY UPDATE items = :items',
+		{
+			['stash'] = stashId,
+			['items'] = json.encode(items)
+		})
+
+	Stashes[stashId].isOpen = false
+	TriggerEvent('keep-harmony:stash->close', stashId) --- this is the line 
+end
+```
+
+And then add this export at the end of `server/main.lua`:
+
+```lua
+exports('GetInventoryData', function(type, id)
+	if type == 'stash' then
+		return Stashes[id]
+	end
+end)
 ```
 
 - done
