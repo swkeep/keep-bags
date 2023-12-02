@@ -4,7 +4,7 @@ Config = {}
 Config.max_inventory_slots = 41
 
 Config.clothingScript = 'qb-clothing' -- illenium-appearance or qb-clothing oe esx (skinchanger)
--- when set to skinchanger it'slots only supports bag as clothing option and nothing more!
+-- When set to skinchanger, it only supports 'bag' as a clothing option and nothing else!
 
 -- Default durations (in seconds)
 Config.duration = {
