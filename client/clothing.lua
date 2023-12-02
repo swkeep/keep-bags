@@ -91,6 +91,14 @@ local function setCloth(cloth_type, cloth)
 
     if Config.clothingScript == 'qb-clothing' then
         TriggerEvent('qb-clothing:client:loadOutfit', outfit)
+    elseif Config.clothingScript == 'skinchanger' then
+        TriggerEvent('skinchanger:getSkin', function(skin)
+            TriggerEvent('skinchanger:loadSkin', {
+                sex = skin.sex,
+                bags_1 = cloth.item,
+                bags_2 = cloth.texture
+            })
+        end)
     else
         TriggerEvent('illenium-appearance:client:loadJobOutfit', outfit)
     end

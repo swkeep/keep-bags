@@ -3,7 +3,8 @@ Config = {}
 -- Maximum inventory slots for players (inventory slots)
 Config.max_inventory_slots = 41
 
-Config.clothingScript = 'qb-clothing' -- illenium-appearance or qb-clothing
+Config.clothingScript = 'qb-clothing' -- illenium-appearance or qb-clothing oe esx (skinchanger)
+-- when set to skinchanger it'slots only supports bag as clothing option and nothing more!
 
 -- Default durations (in seconds)
 Config.duration = {
@@ -35,7 +36,7 @@ Config.Bags = {
                     ["bag"] = { item = 36, texture = 0 }
                },
                female = {
-                    ["vest"] = { item = 61, texture = 0 }
+                    ["bag"] = { item = 1, texture = 0 }
                }
           },
           -- If active, the backpack only accepts items listed here and returns other items to the player
