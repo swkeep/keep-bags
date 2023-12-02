@@ -34,7 +34,7 @@ local function use_lockpick(source, item)
 
     local items = {}
 
-    for item_name, value in pairs(Config.Backpacks) do
+    for item_name, value in pairs(Config.Bags) do
         if value.locked then
             local found_items = Harmony.Item.Search_by.Name(Player, item_name)
             if found_items then
@@ -55,7 +55,7 @@ Harmony.Event.onNet('server:lockpick:open', function(source, item_name, id)
     if not IsBackpack(backpack_item) or not hasItemLockpick then return end
 
     if Harmony.Player.RemoveItem(source, Player, 'briefcaselockpicker') then
-        Open_backpack(source, id, item_name)
+        TriggerEvent('keep-bags:server:openBag', source, id, item_name)
     end
 end)
 

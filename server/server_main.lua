@@ -13,36 +13,10 @@ local resource_name = GetCurrentResourceName()
 local Harmony = exports["keep-harmony"]:GetCoreObject()
 local Shared = exports["keep-harmony"]:Shared()
 local CreateUseableItem = Harmony.Item.CreateUseableItem
-local RandomId = Shared.RandomId
-local MySQL = MySQL
-
-local Backpack = {
-     data = {}
-}
+local RandomId = Shared.Util.randomId
+local CustomDJB2 = Shared.CustomDJB2
+local Backpack = { data = {} }
 ------------------------------------------ Functions -------------------------------------------------
-
-local function str_split(inputstr, sep)
-     if sep == nil then
-          sep = "%s"
-     end
-     local t = {}
-     for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
-          table.insert(t, str)
-     end
-     return t
-end
-
-local function SaveStashItems(stashId, items)
-     if stashId and items then
-          for slot, item in pairs(items) do
-               item.description = nil
-          end
-          MySQL.Async.insert('INSERT INTO stashitems (stash, items) VALUES (:stash, :items) ON DUPLICATE KEY UPDATE items = :items', {
-               ['stash'] = stashId,
-               ['items'] = json.encode(items)
-          })
-     end
-end
 
 local function getItemAmount(item)
      if item.amount then
@@ -94,10 +68,6 @@ local function hasTooManyBackpacks(Player, item)
      return numBackpacksOfType > Config.maximum_allowed
 end
 
-local function GetBackpackConfig(item_name)
-     return Config.Backpacks[item_name]
-end
-
 local function checkForNestedBackpacks(stash_items, backpack_id, source, Player)
      local has_backpack_inception = false
      for key, item in pairs(stash_items) do
@@ -134,9 +104,13 @@ end
 local function filterValidItems(stash_items, backpack_conf)
      local valid_items
      if backpack_conf.whitelist then
-          valid_items = filter(stash_items, function(item) return backpack_conf.whitelist[string.lower(item.name)] end)
+          valid_items = filter(stash_items, function(item)
+               return backpack_conf.whitelist[string.lower(item.name)]
+          end)
      elseif backpack_conf.blacklist then
-          valid_items = filter(stash_items, function(item) return not backpack_conf.blacklist[string.lower(item.name)] end)
+          valid_items = filter(stash_items, function(item)
+               return not backpack_conf.blacklist[string.lower(item.name)]
+          end)
      else
           valid_items = stash_items
      end
@@ -156,23 +130,51 @@ local function notifyAndReturnInvalidItems(stash_items, valid_items, Player, sou
      end
 end
 
-function Open_backpack(source, id, item_name)
-     local backpack_conf = GetBackpackConfig(item_name)
-
-     Harmony.Stash('Bag_', id).Open(source, {
-          metadata = {
-               size = backpack_conf.size or 10000,
-               slots = backpack_conf.slots or 6,
-          },
-          duration = Config.duration.open
-     }, true, { animDict = "clothingshirt", anim = "try_shirt_positive_d", flags = 49 })
+local function get_opening_duration(bag_config)
+     return bag_config.duration and bag_config.duration.opening or Config.duration.open
 end
+
+local function closeBag(source, id, initialItems)
+     local Player = Harmony.Player.Object(source)
+     local backpack = Backpack.data[id]
+     if not backpack then return end
+
+     local backpack_conf = GetBackpackConfig(backpack['item_name'])
+     local stash_items = Harmony.Stash('Bag_', id).Items('inventory')
+
+     checkForNestedBackpacks(stash_items, id, source, Player)
+     checkForOtherBackpacks(stash_items, source, Player)
+     local valid_items = filterValidItems(stash_items, backpack_conf)
+     notifyAndReturnInvalidItems(stash_items, valid_items, Player, source)
+     Harmony.Stash('Bag_', id).Save(stash_items)
+
+     Backpack.data[id] = nil
+end
+
+local function openBag(src, id, item_name)
+     local backpack_conf = GetBackpackConfig(item_name)
+     local stash = Harmony.Stash('Bag_', id)
+     local size = backpack_conf.size or 10000
+     local slots = backpack_conf.slots or 6
+
+     if stash.Open(src, slots, size, get_opening_duration(backpack_conf)) then
+          Backpack.data[id] = { source = src, item_name = item_name }
+
+          stash.observer(function(a)
+               closeBag(src, id, a.initialItems)
+          end)
+     else
+          Harmony.Player.Notify(src, 'Bag is already open')
+     end
+end
+
+AddEventHandler('keep-bags:server:openBag', openBag)
 
 local function backpack_use(source, item_name, backpack_conf, item_ref)
      local Player = Harmony.Player.Object(source)
      if not Player then return end
      local Identifier = Harmony.Player.Identifier(Player)
-     local Hash = Shared.CustomDJB2(Identifier)
+     local Hash = CustomDJB2(Identifier)
      local metadata = Harmony.Item.Metadata.Get(item_ref)
 
      if type(metadata) == 'table' and metadata.ID then
@@ -194,11 +196,6 @@ local function backpack_use(source, item_name, backpack_conf, item_ref)
           Harmony.Player.Notify(source, 'Opening', 'success')
      end
 
-     Backpack.data[metadata.id] = {
-          source = source,
-          item_name = item_name,
-     }
-
      if backpack_conf.locked and not metadata.password then
           Harmony.Event.emitNet('client:set_password', source, metadata.id)
           return
@@ -212,7 +209,7 @@ local function backpack_use(source, item_name, backpack_conf, item_ref)
      if backpack_conf.locked then
           Harmony.Event.emitNet('client:enter_password', source, metadata.id)
      else
-          Open_backpack(source, metadata.id, item_name)
+          openBag(source, metadata.id, item_name)
      end
 end
 
@@ -230,7 +227,7 @@ Harmony.Event.onNet('server:open_with_password', function(source, id, password)
           local metadata = Harmony.Item.Metadata.Get(backpack_item)
 
           if metadata.password == password then
-               Open_backpack(source, id, backpack['item_name'])
+               openBag(source, id, backpack['item_name'])
           else
                Harmony.Player.Notify(source, Locale.get('errors.wrong_password'), 'error')
           end
@@ -242,6 +239,7 @@ Harmony.Event.onNet('server:set_password', function(source, id, password)
           Harmony.Player.Notify(source, Locale.get('errors.try_better_password'), 'error')
           return
      end
+
      local Player = Harmony.Player.Object(source)
      local backpack = Backpack.data[id]
      if backpack and source == backpack['source'] then
@@ -256,41 +254,38 @@ Harmony.Event.onNet('server:set_password', function(source, id, password)
      end
 end)
 
-Harmony.Event.onNet('server:stash:closed', function(source, id)
-     local Player = Harmony.Player.Object(source)
-     local backpack = Backpack.data[id]
-     if not backpack then return end
+RegisterNetEvent('keep-harmony:stash:opening->cancel', function(prefix, id)
+     if prefix ~= 'Bag_' then return end
 
-     local backpack_conf = GetBackpackConfig(backpack['item_name'])
-     local stash_items = Harmony.Stash('Bag_', id).Items()
-
-     checkForNestedBackpacks(stash_items, id, source, Player)
-     checkForOtherBackpacks(stash_items, source, Player)
-     local valid_items = filterValidItems(stash_items, backpack_conf)
-     notifyAndReturnInvalidItems(stash_items, valid_items, Player, source)
-
-     Harmony.Stash('Bag_', id).Save(stash_items)
-end)
-
-RegisterNetEvent('keep-backpack:server:saveBackpack', function(source, stashId, items)
-     local stashIdData = str_split(stashId, "_")
-     local backpackId = stashIdData[2]
-
-     SaveStashItems(stashId, items)
+     local src = source
+     Backpack.data[id] = nil
 end)
 
 AddEventHandler('onResourceStart', function(resource)
      if resource ~= resource_name then return end
-     Wait(1000)
+     Wait(1500)
 
      exports['keep-harmony']:ShowInformation()
      -- exports['keep-harmony']:UpdateChecker()
 end)
 
+AddEventHandler('playerDropped', function(reason)
+     local src = source -- Player ID who disconnected
+
+     for key, value in pairs(Backpack.data) do
+          if value.source == src then
+               closeBag(src, key, {})
+               break
+          end
+     end
+end)
+
 -- items
 
 CreateThread(function()
-     for item_name, backpack_conf in pairs(Config.Backpacks) do
+     local bags = GetAllBags()
+
+     for item_name, backpack_conf in pairs(bags) do
           CreateUseableItem(item_name, function(source, item_ref)
                backpack_use(source, item_name, backpack_conf, item_ref)
           end)

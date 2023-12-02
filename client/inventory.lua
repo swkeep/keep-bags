@@ -77,8 +77,54 @@ end)
 --     Load()
 -- end)
 
-RegisterNetEvent('illenium-appearance:client:reloadSkin', function()
-    Wait(500)
+if Config.clothingScript == 'qb-clothing' then
+    RegisterNetEvent('qb-clothing:client:reloadOutfits', function(myOutfits)
+        Wait(500)
 
-    Load()
-end)
+        Load()
+    end)
+
+    RegisterNetEvent('qb-clothing:client:loadPlayerClothing', function(myOutfits)
+        Wait(1000)
+
+        Load()
+    end)
+
+    RegisterNetEvent('qb-clothing:client->open', function(myOutfits)
+        BodyAttachment:clearAll()
+    end)
+
+    AddEventHandler('qb-clothing:client:onMenuClose', function()
+        Wait(500)
+
+        Load()
+    end)
+elseif Config.clothingScript == 'skinchanger' then
+    RegisterNetEvent('esx_skin:openMenu')
+    AddEventHandler('esx_skin:openMenu', function(submitCb, cancelCb)
+        BodyAttachment:clearAll()
+    end)
+
+    RegisterNetEvent('esx_skin:openRestrictedMenu')
+    AddEventHandler('esx_skin:openRestrictedMenu', function(submitCb, cancelCb, restrict)
+        BodyAttachment:clearAll()
+    end)
+
+    RegisterNetEvent('esx_skin:openSaveableMenu')
+    AddEventHandler('esx_skin:openSaveableMenu', function(submitCb, cancelCb)
+        BodyAttachment:clearAll()
+    end)
+
+    -- Trigger this event when clothes are loaded
+    AddEventHandler('keep-bags:client:reload', function()
+        Wait(500)
+
+        Load()
+    end)
+else
+    RegisterNetEvent('illenium-appearance:client:reloadSkin', function()
+        Wait(500)
+
+        Load()
+    end)
+end

@@ -3,7 +3,7 @@ games { 'gta5' }
 
 name 'keep-bags'
 description 'a bag script that allows players to carry more items within their inventory'
-version '2.0.0'
+version '2.1.0'
 author "Swkeep#7049"
 repository 'https://github.com/swkeep/keep-bags'
 
@@ -11,7 +11,6 @@ shared_scripts {
      'shared/harmony.lua',
      'locale/en.lua',
      'locale/de.lua',
-     'locale/ar.lua',
      'shared/props.lua',
      'config.lua',
      'shared/shared.lua',

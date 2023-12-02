@@ -1,40 +1,56 @@
-Config                                    = Config or {}
+Config = {}
 
-Config.max_inventory_slots                = 41
+-- Maximum inventory slots for players (inventory slots)
+Config.max_inventory_slots = 41
 
-Config.duration                           = {
-     open = 1,  -- sec
-     close = 1, -- Do not lower the closing duration to less than 2 seconds
-     lockpick = 5
+Config.clothingScript = 'qb-clothing' -- illenium-appearance or qb-clothing oe esx (skinchanger)
+-- when set to skinchanger it'slots only supports bag as clothing option and nothing more!
+
+-- Default durations (in seconds)
+Config.duration = {
+     open = 1,    -- Time to open a bag
+     lockpick = 5 -- Time to lockpick a bag
 }
 
+-- Prevent players from carrying multiple backpacks
+-- They will stuck in one place until they put the extra bags away
 Config.notAllowedToCarryMultipleBackpacks = true
-Config.maxAllowedBackpacks                = 4
+-- Maximum allowed backpacks per player
+Config.maxAllowedBackpacks = 2
 
-Config.lockpick_whitelist                 = {
+-- Whitelist for lockpicking access
+Config.lockpick_whitelist = {
      active = true,
-     jobs = { 'police' },
+     jobs = { 'police' }, -- Jobs with lockpicking access
      citizenid = {}
 }
 
--- (important) do not use both prop and cloth at same time just one.
-Config.Backpacks                          = {
-     ['backpack1'] = {
-          slots = 10,
+-- Backpack configurations
+Config.Bags = {
+     {
+          item = 'backpack1',
+          slots = 15,
           size = 100000,
           cloth = {
                male = {
                     ["bag"] = { item = 36, texture = 0 }
                },
                female = {
-                    ["bag"] = { item = 85, texture = 13 }
+                    ["bag"] = { item = 1, texture = 0 }
                }
           },
+          -- If active, the backpack only accepts items listed here and returns other items to the player
           whitelist = {
-               ['iron'] = true
+               'iron',
+               'steel'
           },
+          duration = {
+               opening = 1,
+               lockpicking = 5
+          }
      },
-     ['backpack2'] = {
+     {
+          item = 'backpack2',
           slots = 20,
           size = 200000,
           cloth = {
@@ -45,71 +61,14 @@ Config.Backpacks                          = {
                     ["bag"] = { item = 85, texture = 13 }
                }
           },
+          -- If active, the backpack accepts all items except those listed here
           blacklist = {
-               ['iron'] = true
-          },
+               'water',
+               'steel'
+          }
      },
-     ['backpack3'] = {
-          slots = 30,
-          size = 300000,
-          cloth = {
-               male = {
-                    ["bag"] = { item = 36, texture = 3 }
-               },
-               female = {
-                    ["bag"] = { item = 85, texture = 13 }
-               }
-          },
-     },
-     ['backpack4'] = {
-          slots = 20,
-          size = 200000,
-          cloth = {
-               male = {
-                    ["bag"] = { item = 36, texture = 3 }
-               },
-               female = {
-                    ["bag"] = { item = 85, texture = 13 }
-               }
-          },
-     },
-     ['backpack5'] = {
-          slots = 20,
-          size = 200000,
-          cloth = {
-               male = {
-                    ["bag"] = { item = 69, texture = 0 }
-               },
-               female = {
-                    ["bag"] = { item = 85, texture = 13 }
-               }
-          },
-     },
-     ['backpack6'] = {
-          slots = 20,
-          size = 200000,
-          cloth = {
-               male = {
-                    ["bag"] = { item = 69, texture = 0 }
-               },
-               female = {
-                    ["bag"] = { item = 85, texture = 13 }
-               }
-          },
-     },
-     ['backpack7'] = {
-          slots = 20,
-          size = 200000,
-          cloth = {
-               male = {
-                    ["bag"] = { item = 69, texture = 0 }
-               },
-               female = {
-                    ["bag"] = { item = 85, texture = 13 }
-               }
-          },
-     },
-     ['duffle1'] = {
+     {
+          item = 'duffle1',
           slots = 20,
           size = 200000,
           cloth = {
@@ -119,35 +78,23 @@ Config.Backpacks                          = {
                female = {
                     ["accessory"] = { item = 123, texture = 0 }
                }
-          },
+          }
      },
-     ['duffle2'] = {
-          slots = 40,
-          size = 400000,
-          cloth = {
-               male = {
-                    ["bag"] = { item = 82, texture = 0 }
-               },
-               female = {
-                    ["bag"] = { item = 85, texture = 13 }
-               }
-          },
+     {
+          item = 'paramedicbag',
+          slots = 10,
+          size = 50000,
+          prop = GetProp('paramedicbag') -- Use props from shared/props.lua
      },
-     ['briefcase'] = {
+     {
+          item = 'briefcase',
           slots = 5,
           size = 10000,
           locked = true,
-          prop = GetProp('suitcase2'),
+          prop = GetProp('suitcase2') -- Use props from shared/props.lua
      },
-     ['paramedicbag'] = {
-          slots = 10,
-          size = 50000,
-          prop = GetProp('paramedicbag'),
-     },
-
-     -- police
-
-     ['policepouches'] = {
+     {
+          item = 'policepouches',
           slots = 6,
           size = 200000,
           cloth = {
@@ -156,13 +103,11 @@ Config.Backpacks                          = {
                },
                female = {
                     ["accessory"] = { item = 123, texture = 0 }
-               },
-          },
-          whitelist = {
-               ['weapon_pistol'] = true
-          },
+               }
+          }
      },
-     ['policepouches1'] = {
+     {
+          item = 'policepouches1',
           slots = 12,
           size = 400000,
           cloth = {
@@ -171,10 +116,7 @@ Config.Backpacks                          = {
                },
                female = {
                     ["accessory"] = { item = 123, texture = 0 }
-               },
-          },
-          whitelist = {
-               ['weapon_pistol'] = true
-          },
-     },
+               }
+          }
+     }
 }

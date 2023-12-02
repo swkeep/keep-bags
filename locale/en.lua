@@ -12,30 +12,28 @@ Locale = Shared.Locale.new {
     input = {
         enter_password = "Enter Password",
         set_password = "Set Password",
-        password_title = "Enter the password",
+        password_title = "Enter Password",
     },
-
-    -- notifications
     success = {
-        package_opened_successfully = 'Successfully opened the package',
-        password_set = "Password has been set",
+        package_opened = 'Successfully opened the package',
+        password_set = "Password set successfully",
     },
     info = {
-        package_items_left = 'There are items left in the package',
-        inventory_space_needed = 'Please clear up space in your inventory to receive all items'
+        items_left = 'Items remaining in the package',
+        inventory_space_needed = 'Clear inventory space to receive all items'
     },
     progress = {
         lockpicking = "Lockpicking [slot: %s]",
     },
     errors = {
         cancelled = "Cancelled",
-        try_better_password = "Try a better password",
-        wrong_password = "Wrong password",
-        process_already_started = 'Process already started',
-        max_backpacks = 'You can not carry more than %s backpacks',
-        multiple_backpacks = 'Action not allowd when carrying multiple backpacks!',
-        backpack_self_insertion = 'Oh, honey! Looks like someone thought they could shove their backpack inside itself.',
-        backpack_rule_breaker = "Oh snap! Looks like we have a backpack rule-breaker in the house. Newsflash, you can't just stash one backpack inside another.",
-        backpack_crammed = "Listen up, buddy! I know you're excited about your fancy backpack, but let's get real. You really think it's a good idea to cram %s inside?"
+        try_better_password = "Try a stronger password",
+        wrong_password = "Incorrect password",
+        process_already_started = 'Process already initiated',
+        max_backpacks = 'Cannot carry more than %s backpacks',
+        multiple_backpacks = 'Action not allowed with multiple backpacks!',
+        backpack_self_insertion = 'You can not do this',
+        backpack_rule_breaker = "Oops! You can't stash one backpack inside another one",
+        backpack_crammed = "Hold on! %s was in your backpack! you can not do that"
     },
 }
