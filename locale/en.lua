@@ -27,13 +27,13 @@ Locale = Shared.Locale.new {
     },
     errors = {
         cancelled = "Cancelled",
-        try_better_password = "Try a stronger password",
-        wrong_password = "Incorrect password",
-        process_already_started = 'Process already initiated',
-        max_backpacks = 'Cannot carry more than %s backpacks',
-        multiple_backpacks = 'Action not allowed with multiple backpacks!',
-        backpack_self_insertion = 'You can not do this',
-        backpack_rule_breaker = "Oops! You can't stash one backpack inside another one",
-        backpack_crammed = "Hold on! %s was in your backpack! you can not do that"
+        try_better_password = "Please choose a stronger password",
+        wrong_password = "Incorrect password entered",
+        process_already_started = 'Process already in progress',
+        max_backpacks = 'You cannot carry more than %s backpacks',
+        multiple_backpacks = 'Action not permitted with multiple backpacks',
+        backpack_self_insertion = 'You are not allowed to perform this action',
+        backpack_rule_breaker = "Oops! You can't stash one backpack inside another",
+        backpack_crammed = "Some items cannot be placed there. They will be returned to you"
     },
 }

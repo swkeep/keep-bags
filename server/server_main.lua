@@ -28,11 +28,20 @@ local function getItemAmount(item)
      end
 end
 
+local function retrievalAddItem(source, Player, item)
+     local identifier = Harmony.Player.Identifier(Player)
+
+     local r = RetrievalManager:new(source, identifier)
+     r:addItem(item.name, item.amount or item.count, item.info or item.metadata)
+end
+
 local function giveItemToPlayer(source, Player, item, success, fail)
      local itemMetadata = Harmony.Item.Metadata.Get(item) or {}
      local amount = getItemAmount(item)
 
-     Harmony.Player.GiveItem(source, Player, item.name, amount, nil, itemMetadata, success, fail)
+     Harmony.Player.GiveItem(source, Player, item.name, amount, nil, itemMetadata, nil, function()
+          retrievalAddItem(source, Player, item)
+     end)
 end
 
 local function filter(tbl, predicate)
@@ -123,7 +132,7 @@ local function notifyAndReturnInvalidItems(stash_items, valid_items, Player, sou
      -- items are sorted by their slotIndex
      for slot, item in pairs(stash_items) do
           if not valid_items[slot] then
-               Harmony.Player.Notify(source, Locale.get('errors.backpack_crammed'):format(item.name), 'primary')
+               Harmony.Player.Notify(source, Locale.get('errors.backpack_crammed'), 'primary')
                giveItemToPlayer(source, Player, item)
                stash_items[slot] = nil
           end
@@ -134,7 +143,7 @@ local function get_opening_duration(bag_config)
      return bag_config.duration and bag_config.duration.opening or Config.duration.open
 end
 
-local function closeBag(source, id, initialItems)
+local function closeBag(source, id)
      local Player = Harmony.Player.Object(source)
      local backpack = Backpack.data[id]
      if not backpack then return end
@@ -158,10 +167,8 @@ local function openBag(src, id, item_name)
      local slots = backpack_conf.slots or 6
 
      if stash.Open(src, slots, size, get_opening_duration(backpack_conf)) then
-          Backpack.data[id] = { source = src, item_name = item_name }
-
-          stash.observer(function(a)
-               closeBag(src, id, a.initialItems)
+          stash.observer(function()
+               closeBag(src, id)
           end)
      else
           Harmony.Player.Notify(src, 'Bag is already open')
@@ -196,6 +203,7 @@ local function backpack_use(source, item_name, backpack_conf, item_ref)
           Harmony.Player.Notify(source, 'Opening', 'success')
      end
 
+     Backpack.data[metadata.id] = { source = source, item_name = item_name }
      if backpack_conf.locked and not metadata.password then
           Harmony.Event.emitNet('client:set_password', source, metadata.id)
           return
@@ -222,6 +230,7 @@ Harmony.Event.onNet('server:open_with_password', function(source, id, password)
      end
      local Player = Harmony.Player.Object(source)
      local backpack = Backpack.data[id]
+
      if backpack and source == backpack['source'] then
           local backpack_item = Harmony.Item.Search_by.Id(Player, backpack['item_name'], id)
           local metadata = Harmony.Item.Metadata.Get(backpack_item)
@@ -242,6 +251,7 @@ Harmony.Event.onNet('server:set_password', function(source, id, password)
 
      local Player = Harmony.Player.Object(source)
      local backpack = Backpack.data[id]
+
      if backpack and source == backpack['source'] then
           local backpack_item = Harmony.Item.Search_by.Id(Player, backpack['item_name'], id)
           local metadata = Harmony.Item.Metadata.Get(backpack_item)

@@ -25,6 +25,17 @@ Config.lockpick_whitelist = {
      citizenid = {}
 }
 
+Config.npc = {
+     position = vector4(1169.21, -291.49, 68.02, 321.64),
+     model = 's_m_m_gardener_01',
+     scenario = 'WORLD_HUMAN_DRINKING'
+}
+
+Config.retrieval = {
+     available_at = 2, -- hours
+     expire_at = 24,   -- hours
+}
+
 -- Backpack configurations
 Config.Bags = {
      {

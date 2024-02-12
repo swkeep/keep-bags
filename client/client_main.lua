@@ -15,7 +15,7 @@ Harmony.Event.onNet('client:enter_password', function(id)
      local res = Harmony.CreateInput(Locale.get('input.enter_password'), {
           {
                name = 'password',
-               type = 'text',
+               type = 'password',
                title = Locale.get('input.password_title'),
                icon = 'fa-solid fa-envelope'
           }
@@ -29,7 +29,7 @@ Harmony.Event.onNet('client:set_password', function(id)
      local res = Harmony.CreateInput(Locale.get('input.set_password'), {
           {
                name = 'password',
-               type = 'text',
+               type = 'password',
                title = Locale.get('input.password_title'),
                icon = 'fa-solid fa-envelope'
           }
