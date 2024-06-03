@@ -146,18 +146,28 @@ local function createTarget()
 
     SetEntityAsMissionEntity(ped, true, true)
 
-    exports["qb-target"]:AddTargetEntity(ped, {
-        options = {
-            {
-                icon = "fas fa-box",
-                label = "Retrieve",
-                action = function()
-                    Menu.landing()
-                end
-            }
-        },
-        distance = 1.0
-    })
+    Harmony.Target.onEntity(ped, {
+        {
+            icon = "fas fa-box",
+            label = "Retrieve",
+            action = function()
+                Menu.landing()
+            end
+        }
+    }, 2.0)
+
+    -- exports["qb-target"]:AddTargetEntity(ped, {
+    --     options = {
+    --         {
+    --             icon = "fas fa-box",
+    --             label = "Retrieve",
+    --             action = function()
+    --                 Menu.landing()
+    --             end
+    --         }
+    --     },
+    --     distance = 1.0
+    -- })
 end
 
 AddEventHandler('onResourceStart', function(resourceName)
