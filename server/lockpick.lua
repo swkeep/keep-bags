@@ -34,9 +34,9 @@ local function use_lockpick(source, item)
 
     local items = {}
 
-    for item_name, value in pairs(Config.Bags) do
+    for _, value in pairs(Config.Bags) do
         if value.locked then
-            local found_items = Harmony.Item.Search_by.Name(Player, item_name)
+            local found_items = Harmony.Item.Search_by.Name(Player, value.item)
             if found_items then
                 table.move(found_items, 1, #found_items, #items + 1, items)
             end
@@ -54,7 +54,7 @@ Harmony.Event.onNet('server:lockpick:open', function(source, item_name, id)
     local hasItemLockpick = Harmony.Player.HasItem(Player, 'briefcaselockpicker')
     if not IsBackpack(backpack_item) or not hasItemLockpick then return end
 
-    if Harmony.Player.RemoveItem(source, Player, 'briefcaselockpicker') then
+    if Harmony.Player.RemoveItem(source, Player, 'briefcaselockpicker', 1) then
         TriggerEvent('keep-bags:server:openBag', source, id, item_name)
     end
 end)
