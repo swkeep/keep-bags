@@ -3,7 +3,7 @@ games { 'gta5' }
 
 name 'keep-bags'
 description 'a bag script that allows players to carry more items within their inventory'
-version '2.1.1'
+version '2.2.0'
 author "Swkeep#7049"
 repository 'https://github.com/swkeep/keep-bags'
 

@@ -39,6 +39,25 @@ Harmony.onPlayer.Load(function()
     Load()
 end)
 
+-- hide when inside vehicle
+CreateThread(function()
+    local wasInVehicle = false
+
+    while true do
+        local isInVehicle = IsPedInAnyVehicle(PlayerPedId(), true)
+
+        if isInVehicle and not wasInVehicle then
+            BodyAttachment:clearAll()
+            wasInVehicle = true
+        elseif not isInVehicle and wasInVehicle then
+            Load()
+            wasInVehicle = false
+        end
+
+        Wait(250)
+    end
+end)
+
 Harmony.onPlayer.Logout(function()
     BodyAttachment:clearAll()
     loggedOut = true
