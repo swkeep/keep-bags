@@ -143,6 +143,43 @@ local function get_opening_duration(bag_config)
      return bag_config.duration and bag_config.duration.opening or Config.duration.open
 end
 
+local function saveOutfit(bagId, outfit_name, outfit)
+     local metadata = json.encode(outfit)
+
+     local exists = MySQL.query.await('SELECT id FROM keep_bags_outfit WHERE identifier = ? AND outfit_name = ?', {
+          bagId, outfit_name
+     })
+
+     if exists and #exists > 0 then
+          local affectedRows = MySQL.update.await('UPDATE keep_bags_outfit SET metadata = ? WHERE id = ?', {
+               metadata, exists[1].id
+          })
+          return affectedRows > 0, "updated"
+     else
+          local insertId = MySQL.insert.await('INSERT INTO keep_bags_outfit (identifier, outfit_name, metadata) VALUES (?, ?, ?)', {
+               bagId, outfit_name, metadata
+          })
+          return insertId and insertId > 0, "inserted"
+     end
+end
+
+local function getOutfit(bagId)
+     local res = MySQL.query.await('SELECT outfit_name, metadata FROM keep_bags_outfit WHERE identifier = ?', {
+          bagId
+     })
+
+     for key, value in pairs(res) do
+          value.metadata = json.decode(value.metadata)
+     end
+     return res
+end
+
+local function deleteOutfit(bagId, outfit_name)
+     return MySQL.query.await('DELETE FROM keep_bags_outfit WHERE identifier = ? AND outfit_name = ?', {
+          bagId, outfit_name
+     })
+end
+
 local function closeBag(source, id)
      local Player = Harmony.Player.Object(source)
      local backpack = Backpack.data[id]
@@ -162,16 +199,20 @@ end
 
 local function openBag(src, id, item_name)
      local backpack_conf = GetBackpackConfig(item_name)
-     local stash = Harmony.Stash('Bag_', id)
-     local size = backpack_conf.size or 10000
-     local slots = backpack_conf.slots or 6
 
-     if stash.Open(src, slots, size, get_opening_duration(backpack_conf)) then
-          stash.observer(function()
-               closeBag(src, id)
-          end)
+     if backpack_conf.outfitbag then
+          Harmony.Event.emitNet('client:outfitbag_menu', src, item_name, id, getOutfit(id))
      else
-          Harmony.Player.Notify(src, 'Bag is already open')
+          local stash = Harmony.Stash('Bag_', id)
+          local size = backpack_conf.size or 10000
+          local slots = backpack_conf.slots or 6
+          if stash.Open(src, slots, size, get_opening_duration(backpack_conf)) then
+               stash.observer(function()
+                    closeBag(src, id)
+               end)
+          else
+               Harmony.Player.Notify(src, 'Bag is already open')
+          end
      end
 end
 
@@ -262,6 +303,22 @@ Harmony.Event.onNet('server:set_password', function(source, id, password)
 
           Harmony.Player.Notify(source, Locale.get('success.password_set'), 'success')
      end
+end)
+
+Harmony.Event.onNet('server:set_outfit', function(source, item_name, bag_id, name, outfit)
+     local player = Harmony.Player.Object(source)
+     local item = Harmony.Item.Search_by.Id(player, item_name, bag_id)
+     if not item then return end
+
+     saveOutfit(bag_id, name, outfit)
+end)
+
+Harmony.Event.onNet('server:delete_outfit', function(source, item_name, bag_id, name)
+     local player = Harmony.Player.Object(source)
+     local item = Harmony.Item.Search_by.Id(player, item_name, bag_id)
+     if not item then return end
+
+     deleteOutfit(bag_id, name)
 end)
 
 RegisterNetEvent('keep-harmony:stash:opening->cancel', function(prefix, id)

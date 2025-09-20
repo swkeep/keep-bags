@@ -22,11 +22,13 @@ client_scripts {
      'client/clothing.lua',
      'client/backpacks.lua',
      'client/inventory.lua',
-     'client/retrieve.lua'
+     'client/retrieve.lua',
+     'client/outfitbag.lua'
 }
 
 server_script {
      '@oxmysql/lib/MySQL.lua',
+     'server/server.db.lua',
      'server/server_main.lua',
      'server/lockpick.lua',
      'server/retrieve.lua'

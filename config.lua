@@ -36,7 +36,6 @@ Config.retrieval = {
      expire_at = 24,   -- hours
 }
 
--- Backpack configurations
 Config.Bags = {
      {
           item = 'backpack1',
@@ -44,7 +43,7 @@ Config.Bags = {
           size = 100000,
           cloth = {
                male = {
-                    ["bag"] = { item = 36, texture = 0 }
+                    ["bag"] = { item = 66, texture = 0 }
                },
                female = {
                     ["bag"] = { item = 1, texture = 0 }
@@ -77,6 +76,18 @@ Config.Bags = {
                'water',
                'steel'
           }
+     },
+     {
+          item = 'backpack3',
+          outfitbag = true, -- outfit bag
+          cloth = {
+               male = {
+                    ["bag"] = { item = 36, texture = 1 }
+               },
+               female = {
+                    ["bag"] = { item = 85, texture = 13 }
+               }
+          },
      },
      {
           item = 'duffle1',
